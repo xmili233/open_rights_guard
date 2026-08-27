@@ -37,6 +37,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CaseAgentChat } from "@/components/case-agent-chat";
+import { PageGuideDialog } from "@/components/page-guide-dialog";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import {
   DropdownMenu,
@@ -562,6 +563,7 @@ const DashboardHeader = () => {
         >
           <HelpCircle className="size-4" />
         </Button>
+        <PageGuideDialog />
       </div>
     </header>
   );
