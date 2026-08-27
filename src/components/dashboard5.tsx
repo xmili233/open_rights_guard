@@ -1458,7 +1458,7 @@ const RecentTransactionsTable = ({ className }: { className?: string }) => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-8 gap-1 px-2"
+                      className="h-8 gap-1 px-0 has-[>svg]:px-0"
                       onClick={() => setSelectedOrder(order)}
                       aria-label={`查看案件 ${order.orderNumber} 详情`}
                     >
