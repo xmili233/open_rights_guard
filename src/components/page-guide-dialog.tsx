@@ -48,7 +48,7 @@ export function PageGuideDialog() {
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="h-[min(720px,calc(100vh-2rem))] max-w-5xl p-0">
+        <DialogContent className="h-[min(840px,calc(100vh-2rem))] max-w-5xl p-0">
           <DialogTitle className="sr-only">仪表板设计说明</DialogTitle>
 
           <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_220px]">
@@ -79,7 +79,7 @@ export function PageGuideDialog() {
               </Markdown>
             </article>
 
-            <aside className="hidden border-l bg-muted/10 px-6 py-10 lg:block">
+            <aside className="hidden bg-muted/10 px-6 py-10 lg:block">
               <nav className="sticky top-0" aria-label="文章目录">
                 <p className="mb-4 text-xs font-medium text-muted-foreground">
                   本页内容
