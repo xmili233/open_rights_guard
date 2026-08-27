@@ -624,7 +624,7 @@ const StatsCards = () => {
                   </span>
                   <span className="hidden items-center gap-2 text-muted-foreground sm:inline-flex">
                     <span className="size-1 rounded-full bg-muted-foreground" />
-                    <span className="whitespace-nowrap">较上月</span>
+                    <span className="whitespace-nowrap">较昨日</span>
                   </span>
                 </div>
               </div>
