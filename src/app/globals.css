@@ -149,6 +149,15 @@
   }
 }
 
+.guide-unread-spin {
+  animation: guide-unread-spin 3.6s ease-in-out infinite;
+}
+
+@keyframes guide-unread-spin {
+  0% { transform: rotate(0deg); }
+  22%, 100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 640px) {
   .page-shell { border-inline: 0; }
 }
@@ -157,4 +166,5 @@
   html { scroll-behavior: auto; }
   .platform-track { animation-play-state: paused; }
   .agent-panel-enter { animation: none; }
+  .guide-unread-spin { animation: none; }
 }

@@ -74,7 +74,7 @@ export function PageGuideDialog({
         title="页面说明"
         onClick={openGuide}
       >
-        <BookOpenText className="size-5" />
+        <BookOpenText className={`size-5 ${unread ? "guide-unread-spin" : ""}`} />
         {unread && (
           <span
             data-guide-unread-dot
