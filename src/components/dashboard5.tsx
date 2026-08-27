@@ -1898,7 +1898,7 @@ const Dashboard5 = ({ className }: { className?: string }) => {
           <DashboardHeader />
           <DashboardContent />
         </div>
-        <PageGuideDialog />
+        <PageGuideDialog storageKey="open-rights-guard:page-guide:dashboard" />
       </div>
     </ShadTooltipProvider>
   );

@@ -31,6 +31,7 @@ import { Footer2 } from "@/block/footer2/footer2";
 import { Navbar1 } from "@/block/navbar1/navbar1";
 import { Pricing28 } from "@/block/pricing28/pricing28";
 import { Testimonial19 } from "@/block/testimonial19/testimonial19";
+import { PageGuideDialog } from "@/components/page-guide-dialog";
 import { Button } from "@/components/ui/button";
 
 const channels = [
@@ -332,6 +333,7 @@ export default function Home() {
         copyright="© 2026 Open Rights Guard."
         legalLinks={[{ name: "服务条款", href: "#" }, { name: "隐私政策", href: "#" }]}
       />
+      <PageGuideDialog storageKey="open-rights-guard:page-guide:homepage" />
     </main>
   );
 }

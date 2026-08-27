@@ -31,8 +31,39 @@ Open Rights Guard 将版权维护的关键结果集中在一处，让复杂的�
 用户只需要查看结果并在必要时作出判断。证据固化、材料准备和进度跟踪由 Agent 持续执行。
 `;
 
-export function PageGuideDialog() {
+const subscribeToStorage = (onStoreChange: () => void) => {
+  window.addEventListener("storage", onStoreChange);
+  return () => window.removeEventListener("storage", onStoreChange);
+};
+
+const getServerUnread = () => false;
+
+export function PageGuideDialog({ storageKey }: { storageKey: string }) {
   const [open, setOpen] = React.useState(false);
+  const [readInSession, setReadInSession] = React.useState(false);
+  const getUnread = React.useCallback(() => {
+    try {
+      return window.localStorage.getItem(storageKey) !== "read";
+    } catch {
+      return true;
+    }
+  }, [storageKey]);
+  const storedUnread = React.useSyncExternalStore(
+    subscribeToStorage,
+    getUnread,
+    getServerUnread,
+  );
+  const unread = storedUnread && !readInSession;
+
+  const openGuide = () => {
+    try {
+      window.localStorage.setItem(storageKey, "read");
+    } catch {
+      // The dialog still works when browser storage is unavailable.
+    }
+    setReadInSession(true);
+    setOpen(true);
+  };
 
   return (
     <>
@@ -40,11 +71,18 @@ export function PageGuideDialog() {
         type="button"
         size="icon"
         className="fixed right-5 bottom-5 z-40 size-12 rounded-full shadow-lg sm:right-6 sm:bottom-6"
-        aria-label="查看页面设计说明"
+        aria-label={unread ? "查看未读的页面设计说明" : "查看页面设计说明"}
         title="页面说明"
-        onClick={() => setOpen(true)}
+        onClick={openGuide}
       >
         <BookOpenText className="size-5" />
+        {unread && (
+          <span
+            data-guide-unread-dot
+            className="absolute top-0 right-0 size-3 rounded-full border-2 border-background bg-red-500"
+            aria-hidden="true"
+          />
+        )}
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
