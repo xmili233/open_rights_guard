@@ -16,10 +16,13 @@ import {
   SiBaidu,
   SiBilibili,
   SiEbay,
+  SiEtsy,
   SiGoogle,
   SiInstagram,
+  SiPinterest,
   SiTaobao,
   SiTiktok,
+  SiVimeo,
   SiXiaohongshu,
   SiYoutube,
 } from "react-icons/si";
@@ -32,8 +35,8 @@ import { Button } from "@/components/ui/button";
 
 const channels = [
   { name: "淘宝", type: "电商平台", icon: SiTaobao },
-  { name: "京东", type: "电商平台", mark: "JD" },
-  { name: "拼多多", type: "电商平台", mark: "拼" },
+  { name: "eBay", type: "跨境电商", icon: SiEbay },
+  { name: "Etsy", type: "创意电商", icon: SiEtsy },
   { name: "小红书", type: "内容社区", icon: SiXiaohongshu },
   { name: "Google", type: "搜索引擎", icon: SiGoogle },
   { name: "百度", type: "搜索引擎", icon: SiBaidu },
@@ -41,7 +44,8 @@ const channels = [
   { name: "哔哩哔哩", type: "流媒体", icon: SiBilibili },
   { name: "YouTube", type: "流媒体", icon: SiYoutube },
   { name: "Instagram", type: "社交媒体", icon: SiInstagram },
-  { name: "eBay", type: "跨境电商", icon: SiEbay },
+  { name: "Pinterest", type: "图片社区", icon: SiPinterest },
+  { name: "Vimeo", type: "视频平台", icon: SiVimeo },
 ];
 
 const testimonials = [
@@ -160,22 +164,31 @@ function Coverage() {
         </div>
       </div>
 
-      <div className="platform-rail mt-16 border-y">
-        <div className="platform-track">
-          {[...channels, ...channels].map((channel, index) => {
-            const Icon = channel.icon;
-            return (
-              <div key={`${channel.name}-${index}`} className="flex min-w-56 items-center gap-4 border-r px-7 py-6">
-                <span className="grid size-11 shrink-0 place-items-center rounded-lg border bg-background text-sm font-semibold">
-                  {Icon ? <Icon className="size-5" /> : channel.mark}
-                </span>
-                <span>
-                  <span className="block text-sm font-medium">{channel.name}</span>
-                  <span className="mt-0.5 block text-xs text-muted-foreground">{channel.type}</span>
-                </span>
-              </div>
-            );
-          })}
+      <div className="platform-rail relative mt-16 border-y">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-linear-to-r from-background to-transparent md:w-40" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-linear-to-l from-background to-transparent md:w-40" />
+        <div className="platform-track items-center py-8">
+          {[0, 1].map((copy) => (
+            <div
+              key={copy}
+              className="flex shrink-0 items-center gap-16 pr-16"
+              aria-hidden={copy === 1}
+            >
+              {channels.map((channel) => {
+                const Icon = channel.icon;
+                return (
+                  <div
+                    key={channel.name}
+                    className="flex min-w-28 items-center justify-center gap-3 text-foreground"
+                    aria-label={`${channel.name}，${channel.type}`}
+                  >
+                    <Icon className="size-8 shrink-0" aria-hidden="true" />
+                    <span className="text-sm font-medium whitespace-nowrap">{channel.name}</span>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
 
