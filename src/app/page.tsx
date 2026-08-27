@@ -29,7 +29,7 @@ import {
 
 import { Footer2 } from "@/block/footer2/footer2";
 import { Navbar1 } from "@/block/navbar1/navbar1";
-import { Pricing2 } from "@/block/pricing2/pricing2";
+import { Pricing28 } from "@/block/pricing28/pricing28";
 import { Testimonial19 } from "@/block/testimonial19/testimonial19";
 import { Button } from "@/components/ui/button";
 
@@ -66,20 +66,44 @@ const testimonials = [
 const pricingPlans = [
   {
     name: "创作者版",
-    description: "适合独立创作者与小型工作室",
     monthlyPrice: "¥299",
     yearlyPrice: "¥2,988",
+    description: {
+      monthly: "适合独立创作者持续维护个人作品。",
+      yearly: "适合独立创作者长期维护，年付更划算。",
+    },
+    tagline: "独立创作者的持续保护",
     features: ["维护 20 项原创作品", "全渠道持续监测", "侵权证据自动固化", "每月 5 个处置案件"],
-    button: { text: "开始试用", url: "#contact" },
+    buttonText: "开始试用",
+    buttonUrl: "#contact",
+  },
+  {
+    name: "工作室版",
+    monthlyPrice: "¥899",
+    yearlyPrice: "¥8,988",
+    description: {
+      monthly: "适合创作团队与小型品牌协同管理版权。",
+      yearly: "适合稳定创作团队，年付节省日常维护成本。",
+    },
+    tagline: "创作团队与小型品牌",
+    features: ["维护 200 项原创作品", "全渠道高频监测", "侵权证据自动固化", "法律文书生成", "每月 20 个处置案件", "3 位团队成员"],
+    buttonText: "选择工作室版",
+    buttonUrl: "#contact",
+    highlighted: true,
+    highlightedLabel: "最受欢迎",
   },
   {
     name: "企业版",
-    description: "适合品牌、内容平台与专业机构",
     monthlyPrice: "¥1,999",
     yearlyPrice: "¥19,990",
+    description: {
+      monthly: "适合品牌、内容平台与专业机构全面维护版权资产。",
+      yearly: "适合拥有长期维权需求的企业与专业机构。",
+    },
+    tagline: "品牌与专业机构",
     features: ["不限原创作品数量", "多平台高频监测", "法律文书生成与投递", "案件全流程持续推进", "企业成员协作", "专属法律知识库"],
-    button: { text: "联系顾问", url: "#contact" },
-    highlighted: true,
+    buttonText: "联系顾问",
+    buttonUrl: "#contact",
   },
 ];
 
@@ -285,7 +309,7 @@ export default function Home() {
         <Testimonial19 heading="把维权从负担，变成可查看的结果。" description="示例客户如何使用 Open Rights Guard 管理数字版权" testimonials={testimonials} />
       </div>
       <div id="pricing" className="border-t">
-        <Pricing2 heading="按需要选择保护范围" description="从个人作品到企业版权资产，随时升级。" plans={pricingPlans} />
+        <Pricing28 heading="按需要选择保护范围" plans={pricingPlans} />
       </div>
       <section id="contact" className="border-t bg-muted/30 py-20">
         <div className="container mx-auto flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
