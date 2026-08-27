@@ -8,7 +8,9 @@ import {
   ChevronRight,
   ClipboardList,
   Download,
+  Eye,
   FileCheck2,
+  FileText,
   Filter,
   HelpCircle,
   MoreHorizontal,
@@ -17,6 +19,7 @@ import {
   RotateCcw,
   Search,
   ShoppingCart,
+  Video,
 } from "lucide-react";
 import * as React from "react";
 import {
@@ -32,6 +35,7 @@ import {
 } from "recharts";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import {
   DropdownMenu,
@@ -42,6 +46,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemSeparator,
+  ItemTitle,
+} from "@/components/ui/item";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -1189,39 +1204,294 @@ const caseStages = [
   "执行结案",
 ] as const;
 
-const stageDetails = [
+type CaseFile = {
+  title: string;
+  category: string;
+  metadata: string;
+  type: "image" | "pdf" | "video" | "sheet";
+};
+
+type StageDetail = {
+  summary: string;
+  caption: string;
+  facts: readonly (readonly [string, string])[];
+  files: readonly CaseFile[];
+  notice?: string;
+};
+
+const stageDetails: readonly StageDetail[] = [
   {
-    description: "侵权页面、主体信息与时间戳证据已经完成固化。",
-    latestNode: "电子证据包已生成",
-    materialStatus: "网页取证、权利证明与侵权主体信息均已归档",
+    summary: "已固化 12 项证据",
+    caption: "取证完成于 2026-08-27 10:24",
+    facts: [
+      ["证据数量", "12 项"],
+      ["原始链接", "3 个"],
+      ["存证状态", "全部有效"],
+      ["取证时间", "8月27日 10:24"],
+    ],
+    files: [
+      {
+        title: "侵权商品页完整截图.png",
+        category: "侵权页面",
+        metadata: "PNG · 2.8 MB · 8月27日 10:21",
+        type: "image",
+      },
+      {
+        title: "商品销售记录截图.png",
+        category: "交易信息",
+        metadata: "PNG · 1.6 MB · 8月27日 10:22",
+        type: "image",
+      },
+      {
+        title: "店铺主体信息截图.png",
+        category: "主体信息",
+        metadata: "PNG · 980 KB · 8月27日 10:22",
+        type: "image",
+      },
+      {
+        title: "侵权视频录屏.mp4",
+        category: "动态证据",
+        metadata: "MP4 · 18.4 MB · 01:26",
+        type: "video",
+      },
+      {
+        title: "可信时间戳证书.pdf",
+        category: "存证凭证",
+        metadata: "PDF · 324 KB · 验证有效",
+        type: "pdf",
+      },
+      {
+        title: "电子取证报告.pdf",
+        category: "取证报告",
+        metadata: "PDF · 1.2 MB · 18 页",
+        type: "pdf",
+      },
+    ],
   },
   {
-    description: "Agent 已根据证据与诉讼请求生成起诉材料。",
-    latestNode: "起诉书与证据目录已完成",
-    materialStatus: "起诉书、证据清单、主体材料与授权文件均已备齐",
+    summary: "起诉材料已完成",
+    caption: "请求金额 ¥30,000，材料可直接提交",
+    facts: [
+      ["被告", "某电商店铺"],
+      ["请求金额", "¥30,000"],
+      ["案由", "侵害作品信息网络传播权"],
+      ["拟提交法院", "上海市浦东新区人民法院"],
+    ],
+    files: [
+      {
+        title: "民事起诉状.pdf",
+        category: "核心材料",
+        metadata: "PDF · 486 KB · 可直接提交",
+        type: "pdf",
+      },
+      {
+        title: "证据目录.pdf",
+        category: "证据材料",
+        metadata: "PDF · 218 KB · 12 项证据",
+        type: "pdf",
+      },
+      {
+        title: "赔偿金额计算表.xlsx",
+        category: "赔偿依据",
+        metadata: "XLSX · 84 KB · ¥30,000",
+        type: "sheet",
+      },
+      {
+        title: "原告主体资格材料.pdf",
+        category: "主体材料",
+        metadata: "PDF · 1.1 MB",
+        type: "pdf",
+      },
+      {
+        title: "被告主体信息.pdf",
+        category: "主体材料",
+        metadata: "PDF · 672 KB",
+        type: "pdf",
+      },
+      {
+        title: "授权委托材料.pdf",
+        category: "授权材料",
+        metadata: "PDF · 536 KB",
+        type: "pdf",
+      },
+    ],
   },
   {
-    description: "起诉材料已经投递，法院已完成立案受理。",
-    latestNode: "法院立案信息已同步",
-    materialStatus: "案件编号、受理通知与缴费凭证均已归档",
+    summary: "法院已受理",
+    caption: "案件编号：沪0115民初·0827",
+    facts: [
+      ["受理法院", "上海市浦东新区人民法院"],
+      ["立案日期", "2026-08-25"],
+      ["诉讼费", "¥850"],
+      ["缴费状态", "已缴纳"],
+    ],
+    files: [
+      {
+        title: "案件受理通知书.pdf",
+        category: "受理文件",
+        metadata: "PDF · 396 KB · 8月25日",
+        type: "pdf",
+      },
+      {
+        title: "诉讼费缴纳通知书.pdf",
+        category: "缴费文件",
+        metadata: "PDF · 248 KB · ¥850",
+        type: "pdf",
+      },
+      {
+        title: "诉讼费缴费凭证.pdf",
+        category: "缴费凭证",
+        metadata: "PDF · 184 KB · 已缴纳",
+        type: "pdf",
+      },
+      {
+        title: "立案材料接收回执.pdf",
+        category: "提交回执",
+        metadata: "PDF · 302 KB · 8月24日",
+        type: "pdf",
+      },
+    ],
   },
   {
-    description: "法院已受理案件，Agent 正在持续跟进审理节点。",
-    latestNode: "案件进入审理阶段",
-    materialStatus: "庭审材料、法院通知与补充证据均持续更新",
+    summary: "案件审理中",
+    caption: "下一节点：9月12日线上开庭",
+    facts: [
+      ["开庭时间", "2026-09-12 14:00"],
+      ["审理方式", "线上开庭"],
+      ["当前事项", "等待被告提交答辩"],
+      ["距离开庭", "16 天"],
+    ],
+    files: [
+      {
+        title: "开庭传票.pdf",
+        category: "法院通知",
+        metadata: "PDF · 326 KB · 9月12日开庭",
+        type: "pdf",
+      },
+      {
+        title: "举证通知书.pdf",
+        category: "法院通知",
+        metadata: "PDF · 284 KB · 举证期内",
+        type: "pdf",
+      },
+      {
+        title: "被告答辩状.pdf",
+        category: "对方材料",
+        metadata: "PDF · 612 KB · 待接收",
+        type: "pdf",
+      },
+      {
+        title: "证据交换材料.pdf",
+        category: "庭审材料",
+        metadata: "PDF · 2.3 MB · 24 页",
+        type: "pdf",
+      },
+    ],
   },
   {
-    description: "判决、调解或执行结果已经确认，案件完成归档。",
-    latestNode: "案件处理结果已确认",
-    materialStatus: "裁判文书、履行凭证与结案材料均已归档",
+    summary: "案件已结案",
+    caption: "应获赔 ¥30,000，已到账 ¥30,000",
+    facts: [
+      ["结案方式", "判决结案"],
+      ["判决金额", "¥30,000"],
+      ["实际到账", "¥30,000"],
+      ["侵权内容", "已下架"],
+    ],
+    files: [
+      {
+        title: "民事判决书.pdf",
+        category: "裁判文书",
+        metadata: "PDF · 1.4 MB · 22 页",
+        type: "pdf",
+      },
+      {
+        title: "赔偿款到账凭证.pdf",
+        category: "履行凭证",
+        metadata: "PDF · 426 KB · ¥30,000",
+        type: "pdf",
+      },
+      {
+        title: "侵权内容下架证明.png",
+        category: "整改证明",
+        metadata: "PNG · 1.1 MB · 已核验",
+        type: "image",
+      },
+      {
+        title: "结案通知书.pdf",
+        category: "结案文件",
+        metadata: "PDF · 318 KB",
+        type: "pdf",
+      },
+    ],
   },
-] as const;
+];
 
 const statusStageIndex: Record<OrderStatus, number> = {
   材料审核: 0,
   待立案: 1,
   审理中: 3,
   已结案: 4,
+};
+
+const CaseFilePreview = ({
+  file,
+  large = false,
+}: {
+  file: CaseFile;
+  large?: boolean;
+}) => {
+  if (file.type === "image") {
+    return (
+      <div
+        className={cn(
+          "flex shrink-0 flex-col overflow-hidden rounded-md border bg-white p-1.5 shadow-xs",
+          large ? "h-36 w-full p-3" : "h-12 w-16",
+        )}
+        aria-label={`${file.title} 缩略图`}
+      >
+        <div className="flex items-center gap-1 border-b pb-1">
+          <span className="size-1 rounded-full bg-neutral-300" />
+          <span className="size-1 rounded-full bg-neutral-300" />
+          <span className="h-1 flex-1 rounded-full bg-neutral-100" />
+        </div>
+        <div className="mt-1.5 grid min-h-0 flex-1 grid-cols-[1fr_1.4fr] gap-1.5">
+          <div className="rounded-sm bg-neutral-200" />
+          <div className="space-y-1 pt-0.5">
+            <div className="h-1.5 w-4/5 rounded-full bg-neutral-300" />
+            <div className="h-1 w-full rounded-full bg-neutral-200" />
+            <div className="h-1 w-2/3 rounded-full bg-neutral-200" />
+            {large && (
+              <>
+                <div className="mt-3 h-5 w-1/2 rounded-sm bg-neutral-900" />
+                <div className="mt-3 h-1 w-full rounded-full bg-neutral-100" />
+                <div className="h-1 w-5/6 rounded-full bg-neutral-100" />
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const FileIcon = file.type === "video" ? Video : FileText;
+
+  return (
+    <div
+      className={cn(
+        "grid shrink-0 place-items-center rounded-md border bg-muted text-muted-foreground",
+        large ? "h-36 w-full" : "size-12",
+      )}
+    >
+      <div className="flex flex-col items-center gap-2">
+        <FileIcon className={large ? "size-8" : "size-4"} />
+        {large && (
+          <span className="text-[10px] font-medium uppercase">
+            {file.type === "sheet" ? "XLSX" : file.type}
+          </span>
+        )}
+      </div>
+    </div>
+  );
 };
 
 const CaseDetailsDialog = ({
@@ -1233,7 +1503,14 @@ const CaseDetailsDialog = ({
 }) => {
   const activeStage = order ? statusStageIndex[order.status] : 0;
   const [selectedStage, setSelectedStage] = React.useState(activeStage);
+  const [selectedFileIndex, setSelectedFileIndex] = React.useState(0);
   const selectedStageDetails = stageDetails[selectedStage];
+  const selectedFile = selectedStageDetails.files[selectedFileIndex];
+
+  const selectStage = (stageIndex: number) => {
+    setSelectedStage(stageIndex);
+    setSelectedFileIndex(0);
+  };
 
   return (
     <Dialog open={order !== null} onOpenChange={onOpenChange}>
@@ -1264,7 +1541,7 @@ const CaseDetailsDialog = ({
                     type="button"
                     disabled={index > activeStage}
                     aria-current={index === selectedStage ? "step" : undefined}
-                    onClick={() => setSelectedStage(index)}
+                    onClick={() => selectStage(index)}
                     className="group relative z-10 flex min-w-0 flex-col items-center gap-2 rounded-md outline-none enabled:cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <span
@@ -1294,64 +1571,96 @@ const CaseDetailsDialog = ({
         )}
 
         {order && (
-          <div className="grid min-h-0 flex-1 gap-6 overflow-y-auto px-6 pb-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
-            <div className="space-y-6">
-              <div className="flex items-center justify-between rounded-lg border p-4">
+          <div className="grid min-h-0 flex-1 gap-6 overflow-hidden px-6 pb-6 md:grid-cols-[minmax(0,1.4fr)_minmax(280px,.7fr)]">
+            <section className="flex min-h-0 flex-col overflow-hidden rounded-lg border">
+              <div className="flex items-start justify-between gap-4 border-b px-4 py-3.5">
                 <div>
-                  <p className="text-xs text-muted-foreground">当前进度</p>
-                  <p className="mt-1 text-sm font-medium">{order.status}</p>
-                </div>
-                <span
-                  className={cn(
-                    "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium",
-                    statusStyles[order.status],
-                  )}
-                >
-                  {order.status}
-                </span>
-              </div>
-
-              <dl className="divide-y rounded-lg border px-4">
-                {[
-                  ["侵权主体", order.customer],
-                  ["维护作品", order.products.join("、")],
-                  ["请求金额", currencyFormatter.format(order.total)],
-                  ["关联内容", `${order.productCount} 项`],
-                  ["更新时间", order.date],
-                ].map(([label, value]) => (
-                  <div
-                    key={label}
-                    className="flex justify-between gap-6 py-3 text-sm"
-                  >
-                    <dt className="shrink-0 text-muted-foreground">{label}</dt>
-                    <dd className="text-right font-medium">{value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            <section className="h-full rounded-lg border p-5">
-              <h3 className="text-sm font-medium">
-                {caseStages[selectedStage]} · 执行记录
-              </h3>
-              <p className="mt-3 rounded-lg bg-muted p-4 text-sm leading-6 text-muted-foreground">
-                {selectedStageDetails.description}
-              </p>
-              <div className="mt-5 space-y-4 border-l pl-4 text-sm">
-                <div>
-                  <p className="font-medium">最新节点</p>
-                  <p className="mt-1 text-muted-foreground">
-                    {order.date} · {selectedStageDetails.latestNode}
+                  <h3 className="text-sm font-semibold">
+                    {selectedStageDetails.summary}
+                  </h3>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {selectedStageDetails.caption}
                   </p>
                 </div>
-                <div>
-                  <p className="font-medium">材料状态</p>
-                  <p className="mt-1 text-muted-foreground">
-                    {selectedStageDetails.materialStatus}
-                  </p>
-                </div>
+                <Badge variant="secondary">
+                  {selectedStageDetails.files.length} 个文件
+                </Badge>
               </div>
+
+              <ScrollArea className="min-h-0 flex-1">
+                <ItemGroup className="p-2">
+                  {selectedStageDetails.files.map((file, index) => (
+                    <React.Fragment key={file.title}>
+                      {index > 0 && <ItemSeparator />}
+                      <Item
+                        size="sm"
+                        variant={index === selectedFileIndex ? "muted" : "default"}
+                        className="rounded-lg"
+                      >
+                        <ItemMedia>
+                          <CaseFilePreview file={file} />
+                        </ItemMedia>
+                        <ItemContent className="min-w-0">
+                          <ItemTitle className="max-w-full">
+                            <span className="truncate">{file.title}</span>
+                            <Badge variant="outline" className="font-normal">
+                              {file.category}
+                            </Badge>
+                          </ItemTitle>
+                          <ItemDescription>{file.metadata}</ItemDescription>
+                        </ItemContent>
+                        <ItemActions>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 gap-1.5"
+                            onClick={() => setSelectedFileIndex(index)}
+                            aria-label={`查看文件 ${file.title}`}
+                          >
+                            <Eye className="size-3.5" />
+                            查看
+                          </Button>
+                        </ItemActions>
+                      </Item>
+                    </React.Fragment>
+                  ))}
+                </ItemGroup>
+              </ScrollArea>
             </section>
+
+            <aside className="flex min-h-0 flex-col overflow-hidden rounded-lg border">
+              <div className="border-b p-4">
+                <p className="text-sm font-medium">本环节结果</p>
+                <dl className="mt-3 space-y-2.5">
+                  {selectedStageDetails.facts.map(([label, value]) => (
+                    <div
+                      key={label}
+                      className="flex justify-between gap-4 text-xs"
+                    >
+                      <dt className="shrink-0 text-muted-foreground">{label}</dt>
+                      <dd className="text-right font-medium">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              <div className="flex min-h-0 flex-1 flex-col p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-medium">文件预览</p>
+                  <Badge variant="outline">{selectedFile.category}</Badge>
+                </div>
+                <div className="mt-3">
+                  <CaseFilePreview file={selectedFile} large />
+                </div>
+                <p className="mt-3 truncate text-sm font-medium">
+                  {selectedFile.title}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {selectedFile.metadata}
+                </p>
+              </div>
+            </aside>
           </div>
         )}
       </DialogContent>
