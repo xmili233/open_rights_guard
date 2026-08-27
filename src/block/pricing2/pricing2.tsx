@@ -103,13 +103,13 @@ const Pricing2 = (props: Props) => {
         </div>
         <div className="flex flex-col items-center gap-10">
           <div className="flex items-center gap-5 text-base font-semibold">
-            Monthly
+            月付
             <Switch
               className="scale-125"
               checked={isYearly}
               onCheckedChange={() => setIsYearly(!isYearly)}
             />
-            Yearly
+            年付
           </div>
           <div className="mx-auto flex w-full max-w-5xl min-w-0 flex-col items-stretch gap-4 md:flex-row md:items-stretch md:justify-center">
             {(plans ?? []).map((plan) => (
@@ -131,7 +131,7 @@ const Pricing2 = (props: Props) => {
                       {isYearly ? plan.yearlyPrice : plan.monthlyPrice}
                     </span>
                     <span className="text-xl font-normal text-muted-foreground">
-                      {isYearly ? "/per year" : "/per month"}
+                      {isYearly ? "/年" : "/月"}
                     </span>
                   </div>
                   <p className="text-muted-foreground">{plan.description}</p>
@@ -163,7 +163,7 @@ const Pricing2 = (props: Props) => {
                     className="w-full"
                     variant={plan.highlighted ? "default" : "outline"}
                   >
-                    <a href={plan.button.url} target="_blank">
+                    <a href={plan.button.url}>
                       {plan.button.text}
                     </a>
                   </Button>

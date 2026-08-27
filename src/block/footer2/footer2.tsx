@@ -1,16 +1,3 @@
-import {
-  FaFacebook,
-  FaGithub,
-  FaInstagram,
-  FaLinkedin,
-  FaTwitter,
-} from "react-icons/fa";
-import {
-  Logo,
-  LogoImageDesktop,
-  LogoImageMobile,
-} from "@/components/shadcnblocks/logo";
-
 import { cn } from "@/lib/utils";
 
 interface FooterLink {
@@ -114,13 +101,16 @@ const Footer2 = (props: Props) => {
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-6">
             <div className="col-span-2 mb-8 lg:mb-0">
               <div className="flex items-center lg:justify-start">
-                <a href={logo?.url}>
+                <a href={logo?.url} className="flex items-center gap-2">
                   <img
                     src={logo?.src}
                     alt={logo?.alt}
                     title={logo?.title}
                     className="h-7 dark:invert"
                   />
+                  <span className="font-semibold tracking-tight">
+                    {logo?.title}
+                  </span>
                 </a>
               </div>
               <p className="mt-4 text-sm font-medium text-muted-foreground">
@@ -162,4 +152,3 @@ const Footer2 = (props: Props) => {
 };
 
 export { Footer2 };
-

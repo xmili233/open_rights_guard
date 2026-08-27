@@ -151,7 +151,7 @@ const Navbar1 = ({
             <a href={logo.url} className="flex items-center gap-2">
               <img
                 src={logo.src}
-                className="max-h-8 dark:invert"
+                className={cn("h-8 w-auto dark:invert", logo.className)}
                 alt={logo.alt}
               />
               <span className="text-lg font-semibold tracking-tighter">
@@ -183,7 +183,7 @@ const Navbar1 = ({
             <a href={logo.url} className="flex items-center gap-2">
               <img
                 src={logo.src}
-                className="max-h-8 dark:invert"
+                className={cn("h-8 w-auto dark:invert", logo.className)}
                 alt={logo.alt}
               />
             </a>
@@ -199,7 +199,7 @@ const Navbar1 = ({
                     <a href={logo.url} className="flex items-center gap-2">
                       <img
                         src={logo.src}
-                        className="max-h-8 dark:invert"
+                        className={cn("h-8 w-auto dark:invert", logo.className)}
                         alt={logo.alt}
                       />
                     </a>
