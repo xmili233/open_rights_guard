@@ -1505,60 +1505,68 @@ const CaseDetailsDialog = ({
     <>
       <Dialog open={order !== null} onOpenChange={onOpenChange}>
         <DialogContent className="h-[min(720px,calc(100vh-2rem))]">
-        <DialogHeader className="border-b px-6 py-5">
-          <DialogTitle className="text-lg">案件详情</DialogTitle>
-          <DialogDescription>{order?.orderNumber}</DialogDescription>
-        </DialogHeader>
+          <DialogHeader className="border-b px-6 py-4 pr-12 md:flex-row md:items-center md:gap-8">
+            <div className="shrink-0">
+              <DialogTitle className="text-lg">案件详情</DialogTitle>
+              <DialogDescription className="mt-1">
+                {order?.orderNumber}
+              </DialogDescription>
+            </div>
 
-        {order && (
-          <div className="border-b px-6 py-5">
-            <ol className="grid grid-cols-5" aria-label="案件处理进度">
-              {caseStages.map((stage, index) => (
-                <li
-                  key={stage}
-                  className="relative flex min-w-0 flex-col items-center gap-2 text-center"
-                >
-                  {index > 0 && (
-                    <span
-                      className={cn(
-                        "absolute top-3 right-1/2 h-px w-full",
-                        index <= activeStage ? "bg-primary" : "bg-border",
-                      )}
-                      aria-hidden="true"
-                    />
-                  )}
-                  <button
-                    type="button"
-                    disabled={index > activeStage}
-                    aria-current={index === selectedStage ? "step" : undefined}
-                    onClick={() => selectStage(index)}
-                    className="group relative z-10 flex min-w-0 flex-col items-center gap-2 rounded-md outline-none enabled:cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
+            {order && (
+              <ol
+                className="grid w-full flex-1 grid-cols-5"
+                aria-label="案件处理进度"
+              >
+                {caseStages.map((stage, index) => (
+                  <li
+                    key={stage}
+                    className="relative flex min-w-0 flex-col items-center gap-1.5 text-center"
                   >
-                    <span
-                      className={cn(
-                        "grid size-6 place-items-center rounded-full border bg-background text-[10px] font-medium transition-all group-enabled:group-hover:ring-2 group-enabled:group-hover:ring-primary/40 group-enabled:group-hover:ring-offset-2 group-enabled:group-hover:ring-offset-background",
-                        index <= activeStage &&
-                          "border-primary bg-primary text-primary-foreground",
-                        index === selectedStage &&
-                          "ring-2 ring-primary ring-offset-2 ring-offset-background",
-                      )}
+                    {index > 0 && (
+                      <span
+                        className={cn(
+                          "absolute top-3 right-1/2 h-px w-full",
+                          index <= activeStage ? "bg-primary" : "bg-border",
+                        )}
+                        aria-hidden="true"
+                      />
+                    )}
+                    <button
+                      type="button"
+                      disabled={index > activeStage}
+                      aria-current={
+                        index === selectedStage ? "step" : undefined
+                      }
+                      onClick={() => selectStage(index)}
+                      className="group relative z-10 flex min-w-0 flex-col items-center gap-1.5 rounded-md outline-none enabled:cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {index + 1}
-                    </span>
-                    <span
-                      className={cn(
-                        "truncate text-[10px] text-muted-foreground transition-colors group-enabled:group-hover:text-foreground sm:text-xs",
-                        index === selectedStage && "font-medium text-foreground",
-                      )}
-                    >
-                      {stage}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
+                      <span
+                        className={cn(
+                          "grid size-6 place-items-center rounded-full border bg-background text-[10px] font-medium transition-all group-enabled:group-hover:ring-2 group-enabled:group-hover:ring-primary/40 group-enabled:group-hover:ring-offset-2 group-enabled:group-hover:ring-offset-background",
+                          index <= activeStage &&
+                            "border-primary bg-primary text-primary-foreground",
+                          index === selectedStage &&
+                            "ring-2 ring-primary ring-offset-2 ring-offset-background",
+                        )}
+                      >
+                        {index + 1}
+                      </span>
+                      <span
+                        className={cn(
+                          "truncate text-[10px] text-muted-foreground transition-colors group-enabled:group-hover:text-foreground sm:text-xs",
+                          index === selectedStage &&
+                            "font-medium text-foreground",
+                        )}
+                      >
+                        {stage}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </DialogHeader>
 
         {order && (
           <div className="min-h-0 flex-1 overflow-hidden px-6 pb-6">
