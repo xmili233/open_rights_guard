@@ -2,28 +2,20 @@
 
 import {
   ArrowUpRight,
-  BarChart3,
   Bell,
   Box,
   ChevronLeft,
   ChevronRight,
-  ChevronsUpDown,
   ClipboardList,
   Download,
   Filter,
-  Globe,
   HelpCircle,
-  LayoutDashboard,
-  LogOut,
   MoreHorizontal,
-  Package,
   PieChartIcon,
   Plus,
   RotateCcw,
   Search,
-  Settings,
   ShoppingCart,
-  User,
 } from "lucide-react";
 import * as React from "react";
 import {
@@ -38,43 +30,18 @@ import {
   YAxis,
 } from "recharts";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarProvider,
-  SidebarRail,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
 import {
   Table,
   TableBody,
@@ -90,38 +57,6 @@ import {
   TooltipTrigger as ShadTooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-
-type NavItem = {
-  label: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  href: string;
-  isActive?: boolean;
-  children?: NavItem[];
-};
-
-type NavGroup = {
-  title: string;
-  items: NavItem[];
-  defaultOpen?: boolean;
-};
-
-type UserData = {
-  name: string;
-  email: string;
-  avatar: string;
-};
-
-type SidebarData = {
-  logo: {
-    src: string;
-    alt: string;
-    title: string;
-    description: string;
-  };
-  navGroups: NavGroup[];
-  footerGroup: NavGroup;
-  user?: UserData;
-};
 
 type StatItem = {
   title: string;
@@ -222,60 +157,7 @@ const revenueFlowChartConfig = {
   prevYear: { label: "已完成处置", theme: palette.secondary },
 } satisfies ChartConfig;
 
-const sidebarData: SidebarData = {
-  logo: {
-    src: "/shield.svg",
-    alt: "Open Rights Guard",
-    title: "Open Rights Guard",
-    description: "数字版权智能维护",
-  },
-  navGroups: [
-    {
-      title: "工作台",
-      defaultOpen: true,
-      items: [
-        {
-          label: "仪表盘",
-          icon: LayoutDashboard,
-          href: "/dashboard",
-          isActive: true,
-        },
-        { label: "维护项目", icon: Box, href: "#projects" },
-        { label: "新发现", icon: Search, href: "#discoveries" },
-        { label: "诉讼进度", icon: ClipboardList, href: "#cases" },
-      ],
-    },
-    {
-      title: "资料",
-      defaultOpen: true,
-      items: [
-        {
-          label: "作品库",
-          icon: Package,
-          href: "#",
-          children: [
-            { label: "全部作品", icon: Package, href: "#projects" },
-            { label: "图片版权", icon: Package, href: "#projects" },
-            { label: "视频版权", icon: Package, href: "#projects" },
-          ],
-        },
-        { label: "证据库", icon: Globe, href: "#" },
-        { label: "法律知识库", icon: BarChart3, href: "#" },
-      ],
-    },
-  ],
-  footerGroup: {
-    title: "设置",
-    items: [{ label: "设置", icon: Settings, href: "#" }],
-  },
-  user: {
-    name: "林女士",
-    email: "创作者账户",
-    avatar: "",
-  },
-};
-
-const statsData: StatItem[] = [
+ const statsData: StatItem[] = [
   {
     title: "维护中的作品",
     previousValue: 3,
@@ -504,180 +386,10 @@ const recentActivity: ActivityItem[] = [
   },
 ];
 
-const SidebarLogo = ({ logo }: { logo: SidebarData["logo"] }) => {
+ const DashboardHeader = () => {
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <SidebarMenuButton size="lg" tooltip={logo.title}>
-          <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-primary">
-            <span className="text-xs font-semibold text-primary-foreground">OR</span>
-          </div>
-          <div className="flex flex-col gap-0.5 leading-none">
-            <span className="font-medium">{logo.title}</span>
-            <span className="text-xs text-muted-foreground">
-              {logo.description}
-            </span>
-          </div>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    </SidebarMenu>
-  );
-};
-
-const NavMenuItem = ({ item }: { item: NavItem }) => {
-  const Icon = item.icon;
-  const hasChildren = item.children && item.children.length > 0;
-
-  if (!hasChildren) {
-    return (
-      <SidebarMenuItem>
-        <SidebarMenuButton
-          asChild
-          isActive={item.isActive}
-          tooltip={item.label}
-        >
-          <a href={item.href}>
-            <Icon className="size-4" />
-            <span>{item.label}</span>
-          </a>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    );
-  }
-
-  return (
-    <Collapsible asChild defaultOpen className="group/collapsible">
-      <SidebarMenuItem>
-        <CollapsibleTrigger asChild>
-          <SidebarMenuButton isActive={item.isActive} tooltip={item.label}>
-            <Icon className="size-4" />
-            <span>{item.label}</span>
-            <ChevronRight className="ml-auto size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-          </SidebarMenuButton>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <SidebarMenuSub>
-            {item.children!.map((child) => (
-              <SidebarMenuSubItem key={child.label}>
-                <SidebarMenuSubButton asChild isActive={child.isActive}>
-                  <a href={child.href}>{child.label}</a>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            ))}
-          </SidebarMenuSub>
-        </CollapsibleContent>
-      </SidebarMenuItem>
-    </Collapsible>
-  );
-};
-
-const NavUser = ({ user }: { user: UserData }) => {
-  return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
-              <Avatar className="size-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">
-                  {user.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs text-muted-foreground">
-                  {user.email}
-                </span>
-              </div>
-              <ChevronsUpDown className="ml-auto size-4" aria-hidden="true" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side="bottom"
-            align="end"
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="size-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">
-                    {user.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    {user.email}
-                  </span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 size-4" aria-hidden="true" />
-              账户
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut className="mr-2 size-4" aria-hidden="true" />
-              退出登录
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
-  );
-};
-
-const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
-  return (
-    <Sidebar variant="inset" collapsible="icon" {...props}>
-      <SidebarHeader>
-        <div className="flex items-center gap-2 group-data-[collapsible=icon]:flex-col">
-          <SidebarLogo logo={sidebarData.logo} />
-          <SidebarTrigger className="ml-auto group-data-[collapsible=icon]:ml-0" />
-        </div>
-      </SidebarHeader>
-      <SidebarContent>
-        {sidebarData.navGroups.map((group) => (
-          <SidebarGroup key={group.title}>
-            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {group.items.map((item) => (
-                  <NavMenuItem key={item.label} item={item} />
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
-      <SidebarFooter>
-        {sidebarData.user && <NavUser user={sidebarData.user} />}
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
-  );
-};
-
-const DashboardHeader = () => {
-  return (
-    <header className="flex w-full items-center gap-3 border-b bg-background px-4 py-4 sm:px-6">
-      <LayoutDashboard className="size-5" aria-hidden="true" />
-      <h1 className="text-base font-medium">仪表盘</h1>
-
+    <header className="flex w-full items-center gap-3 bg-background px-4 py-4 sm:px-6">
+      <h1 className="text-base font-medium">林女士</h1>
       <div className="ml-auto flex items-center gap-2">
         <div className="relative w-full max-w-[220px] sm:max-w-[260px]">
           <Search
@@ -722,10 +434,7 @@ const DashboardHeader = () => {
 const WelcomeSection = () => {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
-      <div className="space-y-2 sm:space-y-5">
-        <h2 className="text-lg leading-relaxed font-semibold sm:text-[22px]">
-          上午好，林女士
-        </h2>
+      <div>
         <p className="text-sm text-muted-foreground sm:text-base">
           今天发现了{" "}
           <span className="font-medium text-foreground">28 条新线索</span>，
@@ -1590,21 +1299,18 @@ const DashboardContent = () => {
 const Dashboard5 = ({ className }: { className?: string }) => {
   return (
     <ShadTooltipProvider>
-      <SidebarProvider className={cn("bg-sidebar", className)}>
+      <div className={cn("h-svh w-full overflow-hidden bg-background", className)}>
         <a
           href="#dashboard-main"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:text-sm focus:text-foreground focus:ring-2 focus:ring-ring"
         >
           跳到主要内容
         </a>
-        <AppSidebar />
-        <div className="h-svh w-full overflow-hidden lg:p-2">
-          <div className="flex h-full w-full flex-col items-center justify-start overflow-hidden bg-background lg:rounded-xl lg:border">
-            <DashboardHeader />
-            <DashboardContent />
-          </div>
+        <div className="flex h-full w-full flex-col items-center justify-start overflow-hidden bg-background">
+          <DashboardHeader />
+          <DashboardContent />
         </div>
-      </SidebarProvider>
+      </div>
     </ShadTooltipProvider>
   );
 };
