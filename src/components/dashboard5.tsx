@@ -568,12 +568,32 @@ const DashboardHeader = () => {
   );
 };
 
+const subscribeToClock = (onChange: () => void) => {
+  const timer = window.setInterval(onChange, 60_000);
+  return () => window.clearInterval(timer);
+};
+
+const getGreeting = () => {
+  const hour = new Date().getHours();
+
+  if (hour < 6) return "凌晨好";
+  if (hour < 12) return "上午好";
+  if (hour < 18) return "下午好";
+  return "晚上好";
+};
+
 const WelcomeSection = () => {
+  const greeting = React.useSyncExternalStore(
+    subscribeToClock,
+    getGreeting,
+    () => "您好",
+  );
+
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
       <div>
         <p className="text-sm text-muted-foreground sm:text-base">
-          <span className="font-medium text-foreground">上午好，林女士。</span>{" "}
+          <span className="font-medium text-foreground">{greeting}，林女士。</span>{" "}
           今天发现了{" "}
           <span className="font-medium text-foreground">28 条新线索</span>，
           <span className="font-medium text-foreground">6 个案件</span>正在推进
