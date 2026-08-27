@@ -43,6 +43,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -1174,11 +1181,148 @@ const statusStyles: Record<OrderStatus, string> = {
   已结案: "bg-white text-neutral-500 ring-1 ring-inset ring-neutral-300",
 };
 
+const statusDescriptions: Record<OrderStatus, string> = {
+  材料审核: "Agent 正在核验权利证明、侵权主体与证据目录。",
+  待立案: "起诉材料已生成并投递，正在等待法院受理。",
+  审理中: "法院已受理案件，Agent 正在持续跟进审理节点。",
+  已结案: "案件已经完成审理或执行，相关材料均已归档。",
+};
+
+const caseStages = [
+  "证据固化",
+  "起诉材料",
+  "立案受理",
+  "审理裁判",
+  "执行结案",
+] as const;
+
+const statusStageIndex: Record<OrderStatus, number> = {
+  材料审核: 0,
+  待立案: 1,
+  审理中: 3,
+  已结案: 4,
+};
+
+const CaseDetailsDialog = ({
+  order,
+  onOpenChange,
+}: {
+  order: Order | null;
+  onOpenChange: (open: boolean) => void;
+}) => {
+  const activeStage = order ? statusStageIndex[order.status] : 0;
+
+  return (
+    <Dialog open={order !== null} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader className="border-b px-6 py-5">
+          <DialogTitle className="text-lg">案件详情</DialogTitle>
+          <DialogDescription>{order?.orderNumber}</DialogDescription>
+        </DialogHeader>
+
+        {order && (
+          <div className="border-b px-6 py-5">
+            <ol className="grid grid-cols-5" aria-label="案件处理进度">
+              {caseStages.map((stage, index) => (
+                <li
+                  key={stage}
+                  className="relative flex min-w-0 flex-col items-center gap-2 text-center"
+                >
+                  {index > 0 && (
+                    <span
+                      className={cn(
+                        "absolute top-3 right-1/2 h-px w-full",
+                        index <= activeStage ? "bg-primary" : "bg-border",
+                      )}
+                      aria-hidden="true"
+                    />
+                  )}
+                  <span
+                    className={cn(
+                      "relative z-10 grid size-6 place-items-center rounded-full border bg-background text-[10px] font-medium",
+                      index <= activeStage &&
+                        "border-primary bg-primary text-primary-foreground",
+                    )}
+                  >
+                    {index + 1}
+                  </span>
+                  <span
+                    className={cn(
+                      "truncate text-[10px] text-muted-foreground sm:text-xs",
+                      index === activeStage && "font-medium text-foreground",
+                    )}
+                  >
+                    {stage}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {order && (
+          <div className="grid min-h-0 gap-6 overflow-y-auto px-6 pb-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+            <div className="space-y-6">
+            <div className="flex items-center justify-between rounded-lg border p-4">
+              <div>
+                <p className="text-xs text-muted-foreground">当前进度</p>
+                <p className="mt-1 text-sm font-medium">{order.status}</p>
+              </div>
+              <span
+                className={cn(
+                  "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium",
+                  statusStyles[order.status],
+                )}
+              >
+                {order.status}
+              </span>
+            </div>
+
+            <dl className="divide-y rounded-lg border px-4">
+              {[
+                ["侵权主体", order.customer],
+                ["维护作品", order.products.join("、")],
+                ["请求金额", currencyFormatter.format(order.total)],
+                ["关联内容", `${order.productCount} 项`],
+                ["更新时间", order.date],
+              ].map(([label, value]) => (
+                <div key={label} className="flex justify-between gap-6 py-3 text-sm">
+                  <dt className="shrink-0 text-muted-foreground">{label}</dt>
+                  <dd className="text-right font-medium">{value}</dd>
+                </div>
+              ))}
+            </dl>
+            </div>
+
+            <section className="rounded-lg border p-5">
+              <h3 className="text-sm font-medium">Agent 进展</h3>
+              <p className="mt-3 rounded-lg bg-muted p-4 text-sm leading-6 text-muted-foreground">
+                {statusDescriptions[order.status]}
+              </p>
+              <div className="mt-5 space-y-4 border-l pl-4 text-sm">
+                <div>
+                  <p className="font-medium">最新节点</p>
+                  <p className="mt-1 text-muted-foreground">{order.date} · {order.status}</p>
+                </div>
+                <div>
+                  <p className="font-medium">材料状态</p>
+                  <p className="mt-1 text-muted-foreground">权利证明、侵权证据和主体信息均已归档</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const RecentTransactionsTable = ({ className }: { className?: string }) => {
   const [statusFilter, setStatusFilter] = React.useState<OrderStatus | "all">(
     "all",
   );
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [selectedOrder, setSelectedOrder] = React.useState<Order | null>(null);
   const pageSize = 20;
 
   const filteredOrders = React.useMemo(() => {
@@ -1273,13 +1417,16 @@ const RecentTransactionsTable = ({ className }: { className?: string }) => {
               <TableHead className="text-xs font-medium text-muted-foreground sm:text-sm">
                 最新进度
               </TableHead>
+              <TableHead className="w-20 text-right text-xs font-medium text-muted-foreground sm:text-sm">
+                详情
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {paginatedOrders.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={4}
+                  colSpan={5}
                   className="h-20 text-center text-sm text-muted-foreground"
                 >
                   暂无符合条件的案件
@@ -1306,6 +1453,18 @@ const RecentTransactionsTable = ({ className }: { className?: string }) => {
                     >
                       {order.status}
                     </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 gap-1 px-2"
+                      onClick={() => setSelectedOrder(order)}
+                      aria-label={`查看案件 ${order.orderNumber} 详情`}
+                    >
+                      查看
+                      <ChevronRight className="size-3.5" aria-hidden="true" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))
@@ -1341,6 +1500,12 @@ const RecentTransactionsTable = ({ className }: { className?: string }) => {
           </Button>
         </div>
       </div>
+      <CaseDetailsDialog
+        order={selectedOrder}
+        onOpenChange={(open) => {
+          if (!open) setSelectedOrder(null);
+        }}
+      />
     </div>
   );
 };
