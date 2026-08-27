@@ -8,7 +8,6 @@ import {
   ChevronRight,
   ClipboardList,
   Download,
-  Eye,
   FileCheck2,
   FileText,
   Filter,
@@ -48,7 +47,6 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   Item,
-  ItemActions,
   ItemContent,
   ItemDescription,
   ItemGroup,
@@ -1214,21 +1212,13 @@ type CaseFile = {
 type StageDetail = {
   summary: string;
   caption: string;
-  facts: readonly (readonly [string, string])[];
   files: readonly CaseFile[];
-  notice?: string;
 };
 
 const stageDetails: readonly StageDetail[] = [
   {
     summary: "已固化 12 项证据",
     caption: "取证完成于 2026-08-27 10:24",
-    facts: [
-      ["证据数量", "12 项"],
-      ["原始链接", "3 个"],
-      ["存证状态", "全部有效"],
-      ["取证时间", "8月27日 10:24"],
-    ],
     files: [
       {
         title: "侵权商品页完整截图.png",
@@ -1271,12 +1261,6 @@ const stageDetails: readonly StageDetail[] = [
   {
     summary: "起诉材料已完成",
     caption: "请求金额 ¥30,000，材料可直接提交",
-    facts: [
-      ["被告", "某电商店铺"],
-      ["请求金额", "¥30,000"],
-      ["案由", "侵害作品信息网络传播权"],
-      ["拟提交法院", "上海市浦东新区人民法院"],
-    ],
     files: [
       {
         title: "民事起诉状.pdf",
@@ -1319,12 +1303,6 @@ const stageDetails: readonly StageDetail[] = [
   {
     summary: "法院已受理",
     caption: "案件编号：沪0115民初·0827",
-    facts: [
-      ["受理法院", "上海市浦东新区人民法院"],
-      ["立案日期", "2026-08-25"],
-      ["诉讼费", "¥850"],
-      ["缴费状态", "已缴纳"],
-    ],
     files: [
       {
         title: "案件受理通知书.pdf",
@@ -1355,12 +1333,6 @@ const stageDetails: readonly StageDetail[] = [
   {
     summary: "案件审理中",
     caption: "下一节点：9月12日线上开庭",
-    facts: [
-      ["开庭时间", "2026-09-12 14:00"],
-      ["审理方式", "线上开庭"],
-      ["当前事项", "等待被告提交答辩"],
-      ["距离开庭", "16 天"],
-    ],
     files: [
       {
         title: "开庭传票.pdf",
@@ -1391,12 +1363,6 @@ const stageDetails: readonly StageDetail[] = [
   {
     summary: "案件已结案",
     caption: "应获赔 ¥30,000，已到账 ¥30,000",
-    facts: [
-      ["结案方式", "判决结案"],
-      ["判决金额", "¥30,000"],
-      ["实际到账", "¥30,000"],
-      ["侵权内容", "已下架"],
-    ],
     files: [
       {
         title: "民事判决书.pdf",
@@ -1445,7 +1411,7 @@ const CaseFilePreview = ({
       <div
         className={cn(
           "flex shrink-0 flex-col overflow-hidden rounded-md border bg-white p-1.5 shadow-xs",
-          large ? "h-36 w-full p-3" : "h-12 w-16",
+          large ? "h-full w-full p-6" : "h-12 w-16",
         )}
         aria-label={`${file.title} 缩略图`}
       >
@@ -1479,7 +1445,7 @@ const CaseFilePreview = ({
     <div
       className={cn(
         "grid shrink-0 place-items-center rounded-md border bg-muted text-muted-foreground",
-        large ? "h-36 w-full" : "size-12",
+        large ? "h-full w-full" : "size-12",
       )}
     >
       <div className="flex flex-col items-center gap-2">
@@ -1494,6 +1460,30 @@ const CaseFilePreview = ({
   );
 };
 
+const CaseFileDialog = ({
+  file,
+  onOpenChange,
+}: {
+  file: CaseFile | null;
+  onOpenChange: (open: boolean) => void;
+}) => (
+  <Dialog open={file !== null} onOpenChange={onOpenChange}>
+    <DialogContent className="h-[min(720px,calc(100vh-2rem))] max-w-6xl">
+      <DialogHeader className="border-b px-6 py-5">
+        <DialogTitle className="text-lg">{file?.title}</DialogTitle>
+        <DialogDescription>
+          {file?.category} · {file?.metadata}
+        </DialogDescription>
+      </DialogHeader>
+      {file && (
+        <div className="min-h-0 flex-1 bg-muted/40 p-6">
+          <CaseFilePreview file={file} large />
+        </div>
+      )}
+    </DialogContent>
+  </Dialog>
+);
+
 const CaseDetailsDialog = ({
   order,
   onOpenChange,
@@ -1503,18 +1493,18 @@ const CaseDetailsDialog = ({
 }) => {
   const activeStage = order ? statusStageIndex[order.status] : 0;
   const [selectedStage, setSelectedStage] = React.useState(activeStage);
-  const [selectedFileIndex, setSelectedFileIndex] = React.useState(0);
+  const [previewFile, setPreviewFile] = React.useState<CaseFile | null>(null);
   const selectedStageDetails = stageDetails[selectedStage];
-  const selectedFile = selectedStageDetails.files[selectedFileIndex];
 
   const selectStage = (stageIndex: number) => {
     setSelectedStage(stageIndex);
-    setSelectedFileIndex(0);
+    setPreviewFile(null);
   };
 
   return (
-    <Dialog open={order !== null} onOpenChange={onOpenChange}>
-      <DialogContent className="h-[min(720px,calc(100vh-2rem))]">
+    <>
+      <Dialog open={order !== null} onOpenChange={onOpenChange}>
+        <DialogContent className="h-[min(720px,calc(100vh-2rem))]">
         <DialogHeader className="border-b px-6 py-5">
           <DialogTitle className="text-lg">案件详情</DialogTitle>
           <DialogDescription>{order?.orderNumber}</DialogDescription>
@@ -1571,7 +1561,7 @@ const CaseDetailsDialog = ({
         )}
 
         {order && (
-          <div className="grid min-h-0 flex-1 gap-6 overflow-hidden px-6 pb-6 md:grid-cols-[minmax(0,1.4fr)_minmax(280px,.7fr)]">
+          <div className="min-h-0 flex-1 overflow-hidden px-6 pb-6">
             <section className="flex min-h-0 flex-col overflow-hidden rounded-lg border">
               <div className="flex items-start justify-between gap-4 border-b px-4 py-3.5">
                 <div>
@@ -1593,78 +1583,45 @@ const CaseDetailsDialog = ({
                     <React.Fragment key={file.title}>
                       {index > 0 && <ItemSeparator />}
                       <Item
+                        asChild
                         size="sm"
-                        variant={index === selectedFileIndex ? "muted" : "default"}
-                        className="rounded-lg"
+                        className="w-full cursor-pointer rounded-lg text-left hover:bg-accent/50"
                       >
-                        <ItemMedia>
-                          <CaseFilePreview file={file} />
-                        </ItemMedia>
-                        <ItemContent className="min-w-0">
-                          <ItemTitle className="max-w-full">
-                            <span className="truncate">{file.title}</span>
-                            <Badge variant="outline" className="font-normal">
-                              {file.category}
-                            </Badge>
-                          </ItemTitle>
-                          <ItemDescription>{file.metadata}</ItemDescription>
-                        </ItemContent>
-                        <ItemActions>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 gap-1.5"
-                            onClick={() => setSelectedFileIndex(index)}
-                            aria-label={`查看文件 ${file.title}`}
-                          >
-                            <Eye className="size-3.5" />
-                            查看
-                          </Button>
-                        </ItemActions>
+                        <button
+                          type="button"
+                          onClick={() => setPreviewFile(file)}
+                          aria-label={`打开文件 ${file.title}`}
+                        >
+                          <ItemMedia>
+                            <CaseFilePreview file={file} />
+                          </ItemMedia>
+                          <ItemContent className="min-w-0">
+                            <ItemTitle className="max-w-full">
+                              <span className="truncate">{file.title}</span>
+                              <Badge variant="outline" className="font-normal">
+                                {file.category}
+                              </Badge>
+                            </ItemTitle>
+                            <ItemDescription>{file.metadata}</ItemDescription>
+                          </ItemContent>
+                        </button>
                       </Item>
                     </React.Fragment>
                   ))}
                 </ItemGroup>
               </ScrollArea>
             </section>
-
-            <aside className="flex min-h-0 flex-col overflow-hidden rounded-lg border">
-              <div className="border-b p-4">
-                <p className="text-sm font-medium">本环节结果</p>
-                <dl className="mt-3 space-y-2.5">
-                  {selectedStageDetails.facts.map(([label, value]) => (
-                    <div
-                      key={label}
-                      className="flex justify-between gap-4 text-xs"
-                    >
-                      <dt className="shrink-0 text-muted-foreground">{label}</dt>
-                      <dd className="text-right font-medium">{value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-
-              <div className="flex min-h-0 flex-1 flex-col p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm font-medium">文件预览</p>
-                  <Badge variant="outline">{selectedFile.category}</Badge>
-                </div>
-                <div className="mt-3">
-                  <CaseFilePreview file={selectedFile} large />
-                </div>
-                <p className="mt-3 truncate text-sm font-medium">
-                  {selectedFile.title}
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {selectedFile.metadata}
-                </p>
-              </div>
-            </aside>
           </div>
         )}
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+      <CaseFileDialog
+        file={previewFile}
+        onOpenChange={(open) => {
+          if (!open) setPreviewFile(null);
+        }}
+      />
+    </>
   );
 };
 
