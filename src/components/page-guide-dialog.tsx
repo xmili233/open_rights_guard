@@ -38,13 +38,13 @@ export function PageGuideDialog() {
     <>
       <Button
         type="button"
-        size="sm"
-        className="h-9 rounded-full px-3 shadow-sm"
+        size="icon"
+        className="fixed right-5 bottom-5 z-40 size-12 rounded-full shadow-lg sm:right-6 sm:bottom-6"
         aria-label="查看页面设计说明"
+        title="页面说明"
         onClick={() => setOpen(true)}
       >
-        <BookOpenText className="size-4" />
-        <span className="hidden sm:inline">页面说明</span>
+        <BookOpenText className="size-5" />
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>

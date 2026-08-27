@@ -563,7 +563,6 @@ const DashboardHeader = () => {
         >
           <HelpCircle className="size-4" />
         </Button>
-        <PageGuideDialog />
       </div>
     </header>
   );
@@ -1899,6 +1898,7 @@ const Dashboard5 = ({ className }: { className?: string }) => {
           <DashboardHeader />
           <DashboardContent />
         </div>
+        <PageGuideDialog />
       </div>
     </ShadTooltipProvider>
   );
