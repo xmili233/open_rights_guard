@@ -1417,7 +1417,7 @@ const RecentTransactionsTable = ({ className }: { className?: string }) => {
               <TableHead className="text-xs font-medium text-muted-foreground sm:text-sm">
                 最新进度
               </TableHead>
-              <TableHead className="w-20 text-right text-xs font-medium text-muted-foreground sm:text-sm">
+              <TableHead className="w-20 text-left text-xs font-medium text-muted-foreground sm:text-sm">
                 详情
               </TableHead>
             </TableRow>
@@ -1454,7 +1454,7 @@ const RecentTransactionsTable = ({ className }: { className?: string }) => {
                       {order.status}
                     </span>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-left">
                     <Button
                       variant="ghost"
                       size="sm"
