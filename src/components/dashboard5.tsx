@@ -1501,6 +1501,7 @@ const CaseDetailsDialog = ({
   const selectStage = (stageIndex: number) => {
     setSelectedStage(stageIndex);
     setPreviewFile(null);
+    setShowAgent(false);
   };
 
   return (
@@ -1584,10 +1585,7 @@ const CaseDetailsDialog = ({
             )}
           >
             {showAgent && (
-              <CaseAgentChat
-                className="h-full border-r pr-6"
-                onClose={() => setShowAgent(false)}
-              />
+              <CaseAgentChat className="h-full border-r pr-6" />
             )}
             <section className="flex h-full min-h-0 flex-col overflow-hidden">
               <div className="flex items-start justify-between gap-4 border-b py-4">

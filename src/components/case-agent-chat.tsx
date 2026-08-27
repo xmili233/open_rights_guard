@@ -9,10 +9,9 @@ import {
   ThreadPrimitive,
   useExternalStoreRuntime,
 } from "@assistant-ui/react";
-import { ArrowUp, Sparkles, X } from "lucide-react";
+import { ArrowUp, Sparkles } from "lucide-react";
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type DemoMessage = {
@@ -108,37 +107,29 @@ function CaseAgentRuntime({ children }: { children: React.ReactNode }) {
 
 export function CaseAgentChat({
   className,
-  onClose,
 }: {
   className?: string;
-  onClose: () => void;
 }) {
   return (
     <CaseAgentRuntime>
       <ThreadPrimitive.Root
-        className={cn("flex min-h-0 flex-col bg-background", className)}
+        className={cn(
+          "relative flex min-h-0 flex-col overflow-hidden bg-background",
+          className,
+        )}
       >
-        <header className="flex items-center justify-between border-b px-4 py-3">
-          <div>
-            <p className="text-sm font-semibold">材料助手</p>
-            <p className="mt-0.5 text-[11px] text-muted-foreground">
-              仅处理当前案件材料
-            </p>
-          </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            onClick={onClose}
-            aria-label="关闭材料助手"
-          >
-            <X className="size-4" />
-          </Button>
-        </header>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-0 grid place-items-center overflow-hidden"
+        >
+          <span className="-rotate-12 select-none text-4xl font-semibold tracking-[0.28em] text-foreground/[0.045]">
+            演示模式
+          </span>
+        </div>
 
         <ThreadPrimitive.Viewport
           autoScroll
-          className="min-h-0 flex-1 overflow-y-auto py-2"
+          className="relative z-10 min-h-0 flex-1 overflow-y-auto py-2"
         >
           <ThreadPrimitive.Messages>
             {({ message }) =>
@@ -147,7 +138,7 @@ export function CaseAgentChat({
           </ThreadPrimitive.Messages>
         </ThreadPrimitive.Viewport>
 
-        <div className="border-t p-3">
+        <div className="relative z-10 border-t bg-background p-3">
           <ComposerPrimitive.Root className="flex items-end gap-2 rounded-2xl border bg-background p-2 shadow-xs focus-within:ring-2 focus-within:ring-ring/30">
             <ComposerPrimitive.Input
               placeholder="描述需要补充或修改的材料…"
@@ -159,9 +150,6 @@ export function CaseAgentChat({
               <span className="sr-only">发送</span>
             </ComposerPrimitive.Send>
           </ComposerPrimitive.Root>
-          <p className="mt-2 text-center text-[10px] text-muted-foreground">
-            演示模式 · 不会提交真实材料
-          </p>
         </div>
       </ThreadPrimitive.Root>
     </CaseAgentRuntime>
