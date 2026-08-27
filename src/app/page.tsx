@@ -1,17 +1,16 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-
 import {
   ArrowRight,
   Check,
+  Clapperboard,
   FileCheck2,
   FileText,
   Gavel,
+  Images,
   Scale,
   Search,
   Send,
   Store,
-  Video,
+  Tv,
 } from "lucide-react";
 import {
   SiBaidu,
@@ -28,26 +27,26 @@ import {
   SiYoutube,
 } from "react-icons/si";
 
-import { Footer2 } from "@/block/footer2/footer2";
 import { Navbar1 } from "@/block/navbar1/navbar1";
 import { Pricing28 } from "@/block/pricing28/pricing28";
 import { Testimonial19 } from "@/block/testimonial19/testimonial19";
 import { PageGuideDialog } from "@/components/page-guide-dialog";
 import { Button } from "@/components/ui/button";
+import homepageGuide from "../../docs/homepage-design.md?raw";
 
 const channels = [
-  { name: "淘宝", type: "电商平台", icon: SiTaobao },
-  { name: "eBay", type: "跨境电商", icon: SiEbay },
-  { name: "Etsy", type: "创意电商", icon: SiEtsy },
-  { name: "小红书", type: "内容社区", icon: SiXiaohongshu },
-  { name: "Google", type: "搜索引擎", icon: SiGoogle },
-  { name: "百度", type: "搜索引擎", icon: SiBaidu },
-  { name: "抖音", type: "短视频", icon: SiTiktok },
-  { name: "哔哩哔哩", type: "流媒体", icon: SiBilibili },
-  { name: "YouTube", type: "流媒体", icon: SiYoutube },
-  { name: "Instagram", type: "社交媒体", icon: SiInstagram },
-  { name: "Pinterest", type: "图片社区", icon: SiPinterest },
-  { name: "Vimeo", type: "视频平台", icon: SiVimeo },
+  { name: "淘宝", type: "电商平台", icon: SiTaobao, color: "#E94F20" },
+  { name: "eBay", type: "跨境电商", icon: SiEbay, color: "#E53238" },
+  { name: "Etsy", type: "创意电商", icon: SiEtsy, color: "#F16521" },
+  { name: "小红书", type: "内容社区", icon: SiXiaohongshu, color: "#FF2442" },
+  { name: "Google", type: "搜索引擎", icon: SiGoogle, color: "#4285F4" },
+  { name: "百度", type: "搜索引擎", icon: SiBaidu, color: "#2932E1" },
+  { name: "抖音", type: "短视频", icon: SiTiktok, color: "#000000" },
+  { name: "哔哩哔哩", type: "流媒体", icon: SiBilibili, color: "#00A1D6" },
+  { name: "YouTube", type: "流媒体", icon: SiYoutube, color: "#FF0000" },
+  { name: "Instagram", type: "社交媒体", icon: SiInstagram, color: "#FF0069" },
+  { name: "Pinterest", type: "图片社区", icon: SiPinterest, color: "#BD081C" },
+  { name: "Vimeo", type: "视频平台", icon: SiVimeo, color: "#1AB7EA" },
 ];
 
 const testimonials = [
@@ -77,7 +76,7 @@ const pricingPlans = [
     tagline: "独立创作者的持续保护",
     features: ["维护 20 项原创作品", "全渠道持续监测", "侵权证据自动固化", "每月 5 个处置案件"],
     buttonText: "开始试用",
-    buttonUrl: "#contact",
+    buttonUrl: "/dashboard",
   },
   {
     name: "工作室版",
@@ -137,8 +136,10 @@ function DashboardPreview() {
 function Coverage() {
   const capabilities = [
     { icon: Store, title: "网店与交易平台", description: "持续发现商品页、店铺与交易记录中的疑似侵权。" },
-    { icon: Search, title: "搜索与内容社区", description: "覆盖公开搜索结果、文章、图片与用户发布内容。" },
-    { icon: Video, title: "视频与流媒体", description: "识别搬运、盗播与未经授权的二次传播。" },
+    { icon: Search, title: "搜索引擎", description: "覆盖公开搜索结果与图片索引中的侵权内容。" },
+    { icon: Images, title: "内容与社交社区", description: "监测社区、图文与社交平台的未授权发布。" },
+    { icon: Clapperboard, title: "短视频平台", description: "识别短视频搬运、剪辑与账号矩阵传播。" },
+    { icon: Tv, title: "视频与流媒体", description: "追踪长视频、盗播与未经授权的二次传播。" },
   ];
 
   return (
@@ -147,7 +148,7 @@ function Coverage() {
         <div className="max-w-3xl">
           <p className="mb-4 flex items-center gap-2 text-sm font-medium text-muted-foreground"><Search className="size-4" /> 全渠道发现</p>
           <h2 className="text-balance text-4xl font-semibold tracking-tight md:text-5xl">侵权出现在哪里，我们就追踪到哪里。</h2>
-          <p className="mt-5 text-lg leading-8 text-muted-foreground">网店、搜索引擎、内容社区与流媒体统一监测。新的侵权线索自动进入待处理清单。</p>
+          <p className="mt-5 text-lg leading-8 text-muted-foreground">网店、搜索引擎、内容社区、短视频与流媒体统一监测。新的侵权线索自动进入待处理清单。</p>
         </div>
       </div>
 
@@ -166,10 +167,10 @@ function Coverage() {
                 return (
                   <div
                     key={channel.name}
-                    className="flex min-w-28 items-center justify-center gap-3 text-foreground"
+                    className="flex min-w-28 items-center justify-center gap-3"
                     aria-label={`${channel.name}，${channel.type}`}
                   >
-                    <Icon className="size-8 shrink-0" aria-hidden="true" />
+                    <Icon className="size-8 shrink-0" style={{ color: channel.color }} aria-hidden="true" />
                     <span className="text-sm font-medium whitespace-nowrap">{channel.name}</span>
                   </div>
                 );
@@ -179,7 +180,7 @@ function Coverage() {
         </div>
       </div>
 
-      <div className="container mx-auto mt-14 grid gap-8 md:grid-cols-3">
+      <div className="container mx-auto mt-14 grid gap-8 md:grid-cols-3 lg:grid-cols-5">
         {capabilities.map(({ icon: Icon, title, description }) => (
           <div key={title} className="pt-6">
             <Icon className="size-5" />
@@ -249,25 +250,13 @@ function LegalAgent() {
   );
 }
 
-export default async function Home() {
-  const guide = await readFile(
-    path.join(process.cwd(), "docs/homepage-design.md"),
-    "utf8",
-  );
-
+export default function Home() {
   return (
     <main className="flex w-full flex-col">
       <Navbar1
         logo={{ url: "#top", src: "/icon.svg", alt: "Open Rights Guard", title: "Open Rights Guard" }}
-        menu={[
-          { title: "首页", url: "#top" },
-          { title: "工作台", url: "#dashboard" },
-          { title: "全网监测", url: "#coverage" },
-          { title: "法律 Agent", url: "#legal" },
-          { title: "客户评价", url: "#testimonials" },
-          { title: "定价", url: "#pricing" },
-        ]}
-        auth={{ login: { title: "登录工作台", url: "/dashboard" }, signup: { title: "申请试用", url: "#pricing" } }}
+        menu={[]}
+        auth={{ login: { title: "登录工作台", url: "/dashboard" }, signup: { title: "开始试用", url: "/dashboard" } }}
       />
       <DashboardPreview />
       <Coverage />
@@ -284,23 +273,22 @@ export default async function Home() {
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">让侵权停止消耗您的时间。</h2>
             <p className="mt-3 text-muted-foreground">从今天开始，让 Agent 持续维护您的数字版权。</p>
           </div>
-          <Button size="lg" className="h-12 px-6">申请试用 <ArrowRight className="size-4" /></Button>
+          <Button asChild size="lg" className="h-12 px-6">
+            <a href="/dashboard">开始试用 <ArrowRight className="size-4" /></a>
+          </Button>
         </div>
       </section>
-      <Footer2
-        logo={{ url: "#top", src: "/icon.svg", alt: "Open Rights Guard", title: "Open Rights Guard" }}
-        description="AI 时代下，数字版权的坚强守护者。"
-        sections={[
-          { title: "产品", links: [{ name: "工作台", href: "#dashboard" }, { name: "全网监测", href: "#coverage" }, { name: "法律 Agent", href: "#legal" }] },
-          { title: "能力", links: [{ name: "证据固化", href: "#legal" }, { name: "文书生成", href: "#legal" }, { name: "案件推进", href: "#dashboard" }] },
-          { title: "资源", links: [{ name: "客户评价", href: "#testimonials" }, { name: "定价", href: "#pricing" }, { name: "产品演示", href: "/dashboard" }] },
-          { title: "公司", links: [{ name: "关于我们", href: "#" }, { name: "联系我们", href: "#contact" }, { name: "服务状态", href: "#" }] },
-        ]}
-        copyright="© 2026 Open Rights Guard."
-        legalLinks={[{ name: "服务条款", href: "#" }, { name: "隐私政策", href: "#" }]}
-      />
+      <footer className="border-t py-8">
+        <div className="container mx-auto flex flex-col justify-between gap-4 text-xs font-medium text-muted-foreground md:flex-row md:items-center">
+          <p>© 2026 Open Rights Guard.</p>
+          <div className="flex gap-4 underline">
+            <a href="#">服务条款</a>
+            <a href="#">隐私政策</a>
+          </div>
+        </div>
+      </footer>
       <PageGuideDialog
-        guide={guide}
+        guide={homepageGuide}
         storageKey="open-rights-guard:page-guide:homepage"
       />
     </main>
