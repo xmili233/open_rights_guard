@@ -11,24 +11,22 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const sections = ["页面目标", "信息结构", "交互原则"];
+const homepageGuide = `
+# 官网为什么这样设计
 
-const guide = `
-# 仪表板为什么这样设计
-
-Open Rights Guard 将版权维护的关键结果集中在一处，让复杂的执行过程变成清晰、可查看的进展。
+Open Rights Guard 用最少的信息说明产品能为版权方完成什么，并让访问者快速进入产品体验。
 
 ## 页面目标
 
-仪表板把版权维护、侵权发现和诉讼进度集中在同一个页面，帮助用户快速判断今天最需要关注的事项。
+首页首先传达“用户负责判断，系统负责执行”的产品价值，再逐步说明覆盖渠道、诉讼材料与案件管理能力。
 
 ## 信息结构
 
-页面从整体指标开始，再展示近七天趋势，最后落到具体案件。信息由概览逐步进入细节，减少来回查找。
+页面按照价值主张、能力说明和产品预览依次展开，让访问者不需要理解复杂流程也能建立完整认知。
 
 ## 交互原则
 
-用户只需要查看结果并在必要时作出判断。证据固化、材料准备和进度跟踪由 Agent 持续执行。
+保留清晰的主行动入口，减少解释性装饰，并通过真实界面帮助访问者判断产品是否适合自己。
 `;
 
 const subscribeToStorage = (onStoreChange: () => void) => {
@@ -37,10 +35,23 @@ const subscribeToStorage = (onStoreChange: () => void) => {
 };
 
 const getServerUnread = () => false;
+const subscribeToWindowContext = () => () => {};
+const getIsTopLevelPage = () => window.self === window.top;
 
-export function PageGuideDialog({ storageKey }: { storageKey: string }) {
+export function PageGuideDialog({
+  guide = homepageGuide,
+  storageKey,
+}: {
+  guide?: string;
+  storageKey: string;
+}) {
   const [open, setOpen] = React.useState(false);
   const [readInSession, setReadInSession] = React.useState(false);
+  const isTopLevelPage = React.useSyncExternalStore(
+    subscribeToWindowContext,
+    getIsTopLevelPage,
+    () => false,
+  );
   const getUnread = React.useCallback(() => {
     try {
       return window.localStorage.getItem(storageKey) !== "read";
@@ -54,6 +65,12 @@ export function PageGuideDialog({ storageKey }: { storageKey: string }) {
     getServerUnread,
   );
   const unread = storedUnread && !readInSession;
+  const sections = Array.from(
+    guide.matchAll(/^##\s+(.+)$/gm),
+    (match) => match[1].trim(),
+  );
+
+  if (!isTopLevelPage) return null;
 
   const openGuide = () => {
     try {
@@ -87,7 +104,7 @@ export function PageGuideDialog({ storageKey }: { storageKey: string }) {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="h-[min(840px,calc(100vh-2rem))] max-w-5xl p-0">
-          <DialogTitle className="sr-only">仪表板设计说明</DialogTitle>
+          <DialogTitle className="sr-only">页面设计说明</DialogTitle>
 
           <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_220px]">
             <article className="overflow-y-auto px-8 py-10 sm:px-12 lg:px-14">
@@ -106,10 +123,40 @@ export function PageGuideDialog({ storageKey }: { storageKey: string }) {
                       {children}
                     </h2>
                   ),
+                  h3: ({ children }) => (
+                    <h3 className="max-w-2xl pt-7 text-base font-semibold tracking-tight">
+                      {children}
+                    </h3>
+                  ),
                   p: ({ children }) => (
                     <p className="mt-3 max-w-2xl text-[15px] leading-7 text-muted-foreground">
                       {children}
                     </p>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote className="mt-5 max-w-2xl border-l-2 border-foreground/20 pl-4 [&>p]:mt-0 [&>p]:text-sm [&>p]:leading-6">
+                      {children}
+                    </blockquote>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="mt-3 max-w-2xl list-disc space-y-2 pl-5">
+                      {children}
+                    </ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="mt-3 max-w-2xl list-decimal space-y-2 pl-5">
+                      {children}
+                    </ol>
+                  ),
+                  li: ({ children }) => (
+                    <li className="text-[15px] leading-7 text-muted-foreground">
+                      {children}
+                    </li>
+                  ),
+                  strong: ({ children }) => (
+                    <strong className="font-semibold text-foreground">
+                      {children}
+                    </strong>
                   ),
                 }}
               >
@@ -123,15 +170,12 @@ export function PageGuideDialog({ storageKey }: { storageKey: string }) {
                   本页内容
                 </p>
                 <ol className="space-y-1">
-                  {sections.map((section, index) => (
+                  {sections.map((section) => (
                     <li key={section}>
                       <a
                         href={`#${section}`}
-                        className="flex items-center gap-3 rounded-md px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="block rounded-md px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
-                        <span className="text-xs tabular-nums">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
                         {section}
                       </a>
                     </li>

@@ -1884,7 +1884,13 @@ const DashboardContent = () => {
   );
 };
 
-const Dashboard5 = ({ className }: { className?: string }) => {
+const Dashboard5 = ({
+  className,
+  guide,
+}: {
+  className?: string;
+  guide: string;
+}) => {
   return (
     <ShadTooltipProvider>
       <div className={cn("h-svh w-full overflow-hidden bg-background", className)}>
@@ -1898,7 +1904,10 @@ const Dashboard5 = ({ className }: { className?: string }) => {
           <DashboardHeader />
           <DashboardContent />
         </div>
-        <PageGuideDialog storageKey="open-rights-guard:page-guide:dashboard" />
+        <PageGuideDialog
+          guide={guide}
+          storageKey="open-rights-guard:page-guide:dashboard"
+        />
       </div>
     </ShadTooltipProvider>
   );
