@@ -164,7 +164,7 @@ function Coverage() {
         </div>
       </div>
 
-      <div className="platform-rail relative mt-16 border-y">
+      <div className="platform-rail relative mt-16">
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-linear-to-r from-background to-transparent md:w-40" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-linear-to-l from-background to-transparent md:w-40" />
         <div className="platform-track items-center py-8">
@@ -194,7 +194,7 @@ function Coverage() {
 
       <div className="container mx-auto mt-14 grid gap-8 md:grid-cols-3">
         {capabilities.map(({ icon: Icon, title, description }) => (
-          <div key={title} className="border-t pt-6">
+          <div key={title} className="pt-6">
             <Icon className="size-5" />
             <h3 className="mt-5 font-medium">{title}</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
