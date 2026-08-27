@@ -11,24 +11,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const homepageGuide = `
-# 官网为什么这样设计
-
-Open Rights Guard 用最少的信息说明产品能为版权方完成什么，并让访问者快速进入产品体验。
-
-## 页面目标
-
-首页首先传达“用户负责判断，系统负责执行”的产品价值，再逐步说明覆盖渠道、诉讼材料与案件管理能力。
-
-## 信息结构
-
-页面按照价值主张、能力说明和产品预览依次展开，让访问者不需要理解复杂流程也能建立完整认知。
-
-## 交互原则
-
-保留清晰的主行动入口，减少解释性装饰，并通过真实界面帮助访问者判断产品是否适合自己。
-`;
-
 const subscribeToStorage = (onStoreChange: () => void) => {
   window.addEventListener("storage", onStoreChange);
   return () => window.removeEventListener("storage", onStoreChange);
@@ -39,10 +21,10 @@ const subscribeToWindowContext = () => () => {};
 const getIsTopLevelPage = () => window.self === window.top;
 
 export function PageGuideDialog({
-  guide = homepageGuide,
+  guide,
   storageKey,
 }: {
-  guide?: string;
+  guide: string;
   storageKey: string;
 }) {
   const [open, setOpen] = React.useState(false);

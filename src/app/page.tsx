@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+
 import {
   ArrowRight,
   Check,
@@ -246,7 +249,12 @@ function LegalAgent() {
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  const guide = await readFile(
+    path.join(process.cwd(), "docs/homepage-design.md"),
+    "utf8",
+  );
+
   return (
     <main className="flex w-full flex-col">
       <Navbar1
@@ -291,7 +299,10 @@ export default function Home() {
         copyright="© 2026 Open Rights Guard."
         legalLinks={[{ name: "服务条款", href: "#" }, { name: "隐私政策", href: "#" }]}
       />
-      <PageGuideDialog storageKey="open-rights-guard:page-guide:homepage" />
+      <PageGuideDialog
+        guide={guide}
+        storageKey="open-rights-guard:page-guide:homepage"
+      />
     </main>
   );
 }
