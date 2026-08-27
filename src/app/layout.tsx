@@ -25,7 +25,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
+        <div className="flex min-h-full w-full flex-col portrait:hidden">
+          {children}
+        </div>
+        <div
+          className="fixed inset-0 z-[100] hidden items-center justify-center bg-black px-8 text-center text-white portrait:flex"
+          role="alert"
+        >
+          <div className="max-w-md">
+            <p className="text-2xl font-medium tracking-tight">
+              当前窗口不适合浏览
+            </p>
+            <p className="mt-4 text-sm leading-7 text-white/65">
+              检测到当前窗口高度大于宽度。为了获得最佳体验，请使用电脑访问，或将手机旋转至横屏后继续查看。
+            </p>
+          </div>
+        </div>
       </body>
     </html>
   );
