@@ -1265,11 +1265,11 @@ const CaseDetailsDialog = ({
                     disabled={index > activeStage}
                     aria-current={index === selectedStage ? "step" : undefined}
                     onClick={() => setSelectedStage(index)}
-                    className="group relative z-10 flex min-w-0 flex-col items-center gap-2 disabled:cursor-not-allowed"
+                    className="group relative z-10 flex min-w-0 flex-col items-center gap-2 rounded-md outline-none enabled:cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <span
                       className={cn(
-                        "grid size-6 place-items-center rounded-full border bg-background text-[10px] font-medium transition-shadow",
+                        "grid size-6 place-items-center rounded-full border bg-background text-[10px] font-medium transition-all group-enabled:group-hover:ring-2 group-enabled:group-hover:ring-primary/40 group-enabled:group-hover:ring-offset-2 group-enabled:group-hover:ring-offset-background",
                         index <= activeStage &&
                           "border-primary bg-primary text-primary-foreground",
                         index === selectedStage &&
@@ -1280,7 +1280,7 @@ const CaseDetailsDialog = ({
                     </span>
                     <span
                       className={cn(
-                        "truncate text-[10px] text-muted-foreground sm:text-xs",
+                        "truncate text-[10px] text-muted-foreground transition-colors group-enabled:group-hover:text-foreground sm:text-xs",
                         index === selectedStage && "font-medium text-foreground",
                       )}
                     >
