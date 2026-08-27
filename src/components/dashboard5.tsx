@@ -389,7 +389,7 @@ const recentActivity: ActivityItem[] = [
  const DashboardHeader = () => {
   return (
     <header className="flex w-full items-center gap-3 bg-background px-4 py-4 sm:px-6">
-      <h1 className="text-base font-medium">林女士</h1>
+      <h1 className="text-xl font-semibold tracking-tight sm:text-[22px]">林女士</h1>
       <div className="ml-auto flex items-center gap-2">
         <div className="relative w-full max-w-[220px] sm:max-w-[260px]">
           <Search
