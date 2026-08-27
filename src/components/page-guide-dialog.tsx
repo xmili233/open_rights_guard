@@ -103,7 +103,7 @@ export function PageGuideDialog({
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="h-[min(840px,calc(100vh-2rem))] max-w-5xl p-0">
+        <DialogContent className="h-[min(960px,calc(100vh-1.5rem))] max-w-5xl p-0">
           <DialogTitle className="sr-only">页面设计说明</DialogTitle>
 
           <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_220px]">
