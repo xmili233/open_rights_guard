@@ -8,14 +8,16 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 
 const sections = ["页面目标", "信息结构", "交互原则"];
 
 const guide = `
+# 仪表板为什么这样设计
+
+Open Rights Guard 将版权维护的关键结果集中在一处，让复杂的执行过程变成清晰、可查看的进展。
+
 ## 页面目标
 
 仪表板把版权维护、侵权发现和诉讼进度集中在同一个页面，帮助用户快速判断今天最需要关注的事项。
@@ -47,42 +49,21 @@ export function PageGuideDialog() {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="h-[min(720px,calc(100vh-2rem))] max-w-5xl p-0">
-          <DialogHeader className="border-b px-7 py-5 pr-12">
-            <DialogTitle className="text-lg">仪表板设计说明</DialogTitle>
-            <DialogDescription>
-              了解这个页面的内容层级与使用方式
-            </DialogDescription>
-          </DialogHeader>
+          <DialogTitle className="sr-only">仪表板设计说明</DialogTitle>
 
-          <div className="grid min-h-0 flex-1 grid-cols-[200px_minmax(0,1fr)]">
-            <nav className="border-r bg-muted/20 p-5" aria-label="文章目录">
-              <p className="mb-3 text-xs font-medium text-muted-foreground">
-                本页内容
-              </p>
-              <ol className="space-y-1">
-                {sections.map((section, index) => (
-                  <li key={section}>
-                    <a
-                      href={`#${section}`}
-                      className="flex items-center gap-3 rounded-md px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                      <span className="text-xs tabular-nums">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      {section}
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-
-            <article className="overflow-y-auto px-10 py-8">
+          <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_220px]">
+            <article className="overflow-y-auto px-8 py-10 sm:px-12 lg:px-14">
               <Markdown
                 components={{
+                  h1: ({ children }) => (
+                    <h1 className="max-w-2xl pr-8 text-3xl font-semibold tracking-tight sm:text-4xl">
+                      {children}
+                    </h1>
+                  ),
                   h2: ({ children }) => (
                     <h2
                       id={String(children)}
-                      className="scroll-mt-8 pt-8 text-xl font-semibold tracking-tight first:pt-0"
+                      className="scroll-mt-8 pt-10 text-xl font-semibold tracking-tight"
                     >
                       {children}
                     </h2>
@@ -97,6 +78,29 @@ export function PageGuideDialog() {
                 {guide}
               </Markdown>
             </article>
+
+            <aside className="hidden border-l bg-muted/10 px-6 py-10 lg:block">
+              <nav className="sticky top-0" aria-label="文章目录">
+                <p className="mb-4 text-xs font-medium text-muted-foreground">
+                  本页内容
+                </p>
+                <ol className="space-y-1">
+                  {sections.map((section, index) => (
+                    <li key={section}>
+                      <a
+                        href={`#${section}`}
+                        className="flex items-center gap-3 rounded-md px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <span className="text-xs tabular-nums">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        {section}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </aside>
           </div>
         </DialogContent>
       </Dialog>
