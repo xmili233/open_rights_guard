@@ -37,9 +37,25 @@ Open Rights Guard 是一个面向数字内容版权保护的开源 AI Agent 项�
 - **模型可替换：** 业务流程不绑定单一模型或供应商。
 - **结果可验证：** 用召回率、误报率、人工复核成本和处置结果衡量价值。
 
+## 技术栈
+
+- Next.js 16（App Router）
+- React 19 + TypeScript
+- Tailwind CSS 4
+- shadcn/ui
+
+## 本地运行
+
+```bash
+npm install
+npm run dev
+```
+
+打开 [http://localhost:3000](http://localhost:3000)。
+
 ## 项目状态
 
-项目正在初始化。下一步将确定技术栈并完成 URL 检测到报告导出的首个端到端版本。
+落地页已完成第一版。下一步将实现 URL 检测到侵权复核报告导出的首个端到端版本。
 
 ## 免责声明
 
