@@ -388,8 +388,8 @@ const recentActivity: ActivityItem[] = [
 
  const DashboardHeader = () => {
   return (
-    <header className="flex w-full items-center gap-3 bg-background px-4 py-4 sm:px-6">
-      <h1 className="text-xl font-semibold tracking-tight sm:text-[22px]">林女士</h1>
+    <header className="flex w-full items-center gap-3 border-b bg-background px-4 py-4 sm:px-6">
+      <h1 className="text-xl font-semibold tracking-tight sm:text-[22px]">木林影像</h1>
       <div className="ml-auto flex items-center gap-2">
         <div className="relative w-full max-w-[220px] sm:max-w-[260px]">
           <Search
@@ -436,6 +436,7 @@ const WelcomeSection = () => {
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
       <div>
         <p className="text-sm text-muted-foreground sm:text-base">
+          <span className="font-medium text-foreground">上午好，林女士。</span>{" "}
           今天发现了{" "}
           <span className="font-medium text-foreground">28 条新线索</span>，
           <span className="font-medium text-foreground">6 个案件</span>正在推进
