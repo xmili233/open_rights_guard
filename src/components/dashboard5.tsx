@@ -8,6 +8,7 @@ import {
   ChevronRight,
   ClipboardList,
   Download,
+  FileCheck2,
   Filter,
   HelpCircle,
   MoreHorizontal,
@@ -157,7 +158,7 @@ const revenueFlowChartConfig = {
   prevYear: { label: "已完成处置", theme: palette.secondary },
 } satisfies ChartConfig;
 
- const statsData: StatItem[] = [
+const statsData: StatItem[] = [
   {
     title: "维护中的作品",
     previousValue: 3,
@@ -194,33 +195,53 @@ const revenueFlowChartConfig = {
     icon: RotateCcw,
     format: "number",
   },
+  {
+    title: "待核验线索",
+    previousValue: 9,
+    value: 12,
+    changePercent: 33.3,
+    isPositive: true,
+    icon: Filter,
+    format: "number",
+  },
+  {
+    title: "已固化证据",
+    previousValue: 78,
+    value: 96,
+    changePercent: 23.1,
+    isPositive: true,
+    icon: FileCheck2,
+    format: "number",
+  },
 ];
 
-const fullYearData = [
-  { month: "1月", thisYear: 86, prevYear: 61 },
-  { month: "2月", thisYear: 104, prevYear: 73 },
-  { month: "3月", thisYear: 98, prevYear: 82 },
-  { month: "4月", thisYear: 137, prevYear: 94 },
-  { month: "5月", thisYear: 156, prevYear: 121 },
-  { month: "6月", thisYear: 188, prevYear: 146 },
-  { month: "7月", thisYear: 174, prevYear: 139 },
-  { month: "8月", thisYear: 210, prevYear: 168 },
-  { month: "9月", thisYear: 196, prevYear: 157 },
-  { month: "10月", thisYear: 228, prevYear: 183 },
-  { month: "11月", thisYear: 246, prevYear: 204 },
-  { month: "12月", thisYear: 271, prevYear: 231 },
+const dailyTrendData = [
+  { day: "8月14日", thisYear: 71, prevYear: 55 },
+  { day: "8月15日", thisYear: 78, prevYear: 58 },
+  { day: "8月16日", thisYear: 83, prevYear: 61 },
+  { day: "8月17日", thisYear: 76, prevYear: 60 },
+  { day: "8月18日", thisYear: 89, prevYear: 66 },
+  { day: "8月19日", thisYear: 94, prevYear: 70 },
+  { day: "8月20日", thisYear: 97, prevYear: 72 },
+  { day: "8月21日", thisYear: 92, prevYear: 68 },
+  { day: "8月22日", thisYear: 101, prevYear: 72 },
+  { day: "8月23日", thisYear: 96, prevYear: 75 },
+  { day: "8月24日", thisYear: 118, prevYear: 82 },
+  { day: "8月25日", thisYear: 107, prevYear: 91 },
+  { day: "8月26日", thisYear: 126, prevYear: 99 },
+  { day: "8月27日", thisYear: 129, prevYear: 105 },
 ];
 
-type TimePeriod = "6months" | "year";
+type TimePeriod = "7days" | "14days";
 
 const periodLabels: Record<TimePeriod, string> = {
-  "6months": "近 6 个月",
-  year: "近 12 个月",
+  "7days": "近 7 天",
+  "14days": "近 14 天",
 };
 
 function getDataForPeriod(period: TimePeriod) {
-  if (period === "6months") return fullYearData.slice(0, 6);
-  return fullYearData;
+  if (period === "7days") return dailyTrendData.slice(-7);
+  return dailyTrendData;
 }
 
 const orderStatusData = {
@@ -389,7 +410,7 @@ const recentActivity: ActivityItem[] = [
  const DashboardHeader = () => {
   return (
     <header className="flex w-full items-center gap-3 border-b bg-background px-4 py-4 sm:px-6">
-      <h1 className="text-xl font-semibold tracking-tight sm:text-[22px]">木林影像</h1>
+      <h1 className="text-xl font-semibold tracking-tight sm:text-[22px]">木林影像企业</h1>
       <div className="ml-auto flex items-center gap-2">
         <div className="relative w-full max-w-[220px] sm:max-w-[260px]">
           <Search
@@ -465,7 +486,7 @@ const WelcomeSection = () => {
 const StatsCards = () => {
   return (
     <div className="rounded-xl border bg-card">
-      <div className="grid grid-cols-1 divide-x-0 divide-y divide-border sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4 lg:divide-x">
+      <div className="grid grid-cols-1 divide-x-0 divide-y divide-border sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-6 lg:divide-x">
         {statsData.map((stat) => {
           const formatter =
             stat.format === "currency" ? currencyFormatter : numberFormatter;
@@ -839,12 +860,10 @@ function CustomTooltip({
   const prevYear = payload.find((p) => p.dataKey === "prevYear")?.value || 0;
   const diff = Number(thisYear) - Number(prevYear);
   const percentage = prevYear ? Math.round((diff / Number(prevYear)) * 100) : 0;
-  const currentYear = new Date().getFullYear();
-
   return (
     <div className="rounded-lg border border-border bg-popover p-2 shadow-lg sm:p-3">
       <p className="mb-1.5 text-xs font-medium text-foreground sm:mb-2 sm:text-sm">
-        {label}, {currentYear}
+        {label}
       </p>
       <div className="space-y-1 sm:space-y-1.5">
         <div className="flex items-center gap-1.5 sm:gap-2">
@@ -888,7 +907,7 @@ function CustomTooltip({
 }
 
 const RevenueFlowChart = () => {
-  const [period, setPeriod] = React.useState<TimePeriod>("6months");
+  const [period, setPeriod] = React.useState<TimePeriod>("7days");
   const { active: activeSeries, handleHover } = useHoverHighlight<
     "thisYear" | "prevYear"
   >();
@@ -996,7 +1015,7 @@ const RevenueFlowChart = () => {
             </defs>
             <CartesianGrid strokeDasharray="0" vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="day"
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 10 }}
