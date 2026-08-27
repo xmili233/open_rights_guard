@@ -122,6 +122,21 @@
   to { transform: translateX(-50%); }
 }
 
+.agent-panel-enter {
+  animation: agent-panel-enter 200ms ease-out both;
+}
+
+@keyframes agent-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @media (max-width: 640px) {
   .page-shell { border-inline: 0; }
 }
@@ -129,4 +144,5 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .platform-track { animation-play-state: paused; }
+  .agent-panel-enter { animation: none; }
 }

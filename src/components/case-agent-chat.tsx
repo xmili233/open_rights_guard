@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  type AppendMessage,
   AssistantRuntimeProvider,
   ComposerPrimitive,
   MessagePrimitive,
@@ -9,7 +8,7 @@ import {
   ThreadPrimitive,
   useExternalStoreRuntime,
 } from "@assistant-ui/react";
-import { ArrowUp, Sparkles } from "lucide-react";
+import { AudioLines, Mic, Plus, Sparkles } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -66,36 +65,10 @@ const AssistantMessage = () => (
 );
 
 function CaseAgentRuntime({ children }: { children: React.ReactNode }) {
-  const [messages, setMessages] = React.useState(initialMessages);
-  const [isRunning, setIsRunning] = React.useState(false);
-
-  const onNew = async (message: AppendMessage) => {
-    const text = message.content.find((part) => part.type === "text")?.text;
-    if (!text?.trim()) return;
-
-    setMessages((current) => [
-      ...current,
-      { id: `user-${Date.now()}`, role: "user", content: text.trim() },
-    ]);
-    setIsRunning(true);
-    await new Promise((resolve) => setTimeout(resolve, 350));
-    setMessages((current) => [
-      ...current,
-      {
-        id: `assistant-${Date.now()}`,
-        role: "assistant",
-        content:
-          "收到。我会按你的要求重新检查并补充材料。完成后，新增或修改的文件会直接更新在右侧列表。",
-      },
-    ]);
-    setIsRunning(false);
-  };
-
   const runtime = useExternalStoreRuntime({
-    messages,
-    isRunning,
+    messages: initialMessages,
     convertMessage,
-    onNew,
+    onNew: async () => {},
   });
 
   return (
@@ -138,18 +111,39 @@ export function CaseAgentChat({
           </ThreadPrimitive.Messages>
         </ThreadPrimitive.Viewport>
 
-        <div className="relative z-10 border-t bg-background p-3">
-          <ComposerPrimitive.Root className="flex items-end gap-2 rounded-2xl border bg-background p-2 shadow-xs focus-within:ring-2 focus-within:ring-ring/30">
+        <div className="relative z-10 bg-background px-4 pt-3 pb-4">
+          <ComposerPrimitive.Root className="flex h-14 items-center gap-1 rounded-full border bg-background px-2 shadow-xs focus-within:ring-2 focus-within:ring-ring/30">
+            <button
+              type="button"
+              className="grid size-9 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              aria-label="添加附件"
+            >
+              <Plus className="size-4" />
+            </button>
             <ComposerPrimitive.Input
-              placeholder="描述需要补充或修改的材料…"
+              placeholder="Ask anything"
               rows={1}
-              className="max-h-28 min-h-9 flex-1 resize-none bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground"
+              submitMode="none"
+              className="max-h-10 min-h-10 flex-1 resize-none bg-transparent px-1 py-2.5 text-sm outline-none placeholder:text-muted-foreground"
             />
-            <ComposerPrimitive.Send className="grid size-8 shrink-0 place-items-center rounded-full bg-neutral-900 text-white transition-colors hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-30">
-              <ArrowUp className="size-4" />
-              <span className="sr-only">发送</span>
-            </ComposerPrimitive.Send>
+            <button
+              type="button"
+              className="grid size-9 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              aria-label="语音输入"
+            >
+              <Mic className="size-4" />
+            </button>
+            <button
+              type="button"
+              className="grid size-10 shrink-0 place-items-center rounded-full bg-neutral-900 text-white transition-colors hover:bg-neutral-700"
+              aria-label="开始语音对话"
+            >
+              <AudioLines className="size-5" />
+            </button>
           </ComposerPrimitive.Root>
+          <p className="mt-2 text-center text-[10px] text-muted-foreground">
+            AI 可能会出错，请核对重要信息。
+          </p>
         </div>
       </ThreadPrimitive.Root>
     </CaseAgentRuntime>

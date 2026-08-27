@@ -1509,7 +1509,7 @@ const CaseDetailsDialog = ({
       <Dialog open={order !== null} onOpenChange={onOpenChange}>
         <DialogContent
           className={cn(
-            "h-[min(720px,calc(100vh-2rem))]",
+            "h-[min(840px,calc(100vh-2rem))] transition-[max-width] duration-200 ease-out",
             showAgent && "max-w-7xl",
           )}
         >
@@ -1581,11 +1581,11 @@ const CaseDetailsDialog = ({
             className={cn(
               "min-h-0 flex-1 overflow-hidden px-6 pb-6",
               showAgent &&
-                "grid grid-cols-[380px_minmax(0,1fr)] gap-6",
+                "grid grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] gap-6",
             )}
           >
             {showAgent && (
-              <CaseAgentChat className="h-full border-r pr-6" />
+              <CaseAgentChat className="agent-panel-enter h-full border-r pr-6" />
             )}
             <section className="flex h-full min-h-0 flex-col overflow-hidden">
               <div className="flex items-start justify-between gap-4 border-b py-4">
@@ -1603,7 +1603,12 @@ const CaseDetailsDialog = ({
               </div>
 
               <ScrollArea className="min-h-0 flex-1">
-                <ItemGroup className="grid grid-cols-1 gap-3 py-4 md:grid-cols-2">
+                <ItemGroup
+                  className={cn(
+                    "grid grid-cols-1 gap-3 py-4",
+                    !showAgent && "md:grid-cols-2",
+                  )}
+                >
                   {selectedStageDetails.files.map((file) => (
                     <Item
                       key={file.title}
