@@ -42,7 +42,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table,
   TableBody,
@@ -93,12 +92,6 @@ type Order = {
   status: OrderStatus;
   total: number;
   date: string;
-};
-
-type ActivityItem = {
-  title: string;
-  detail: string;
-  time: string;
 };
 
 const currencyFormatter = new Intl.NumberFormat("zh-CN", {
@@ -352,62 +345,163 @@ const orders: Order[] = [
     total: 50000,
     date: "8月23日",
   },
+  {
+    id: "7",
+    orderNumber: "苏0505民初·2214",
+    customer: "某电商旗舰店",
+    customerInitials: "商",
+    products: ["《城市光影》摄影作品"],
+    productCount: 1,
+    status: "材料审核",
+    total: 22000,
+    date: "8月22日",
+  },
+  {
+    id: "8",
+    orderNumber: "京0108民初·1840",
+    customer: "某知识分享平台",
+    customerInitials: "知",
+    products: ["《山海之间》短片"],
+    productCount: 1,
+    status: "审理中",
+    total: 28000,
+    date: "8月21日",
+  },
+  {
+    id: "9",
+    orderNumber: "川0107民初·0953",
+    customer: "某图文自媒体",
+    customerInitials: "图",
+    products: ["无界系列插画"],
+    productCount: 2,
+    status: "已结案",
+    total: 15000,
+    date: "8月20日",
+  },
+  {
+    id: "10",
+    orderNumber: "浙0106民初·3172",
+    customer: "某在线图库",
+    customerInitials: "库",
+    products: ["《日落之后》纪录片"],
+    productCount: 1,
+    status: "待立案",
+    total: 42000,
+    date: "8月19日",
+  },
+  {
+    id: "11",
+    orderNumber: "鄂0106民初·1418",
+    customer: "某营销服务商",
+    customerInitials: "营",
+    products: ["《城市光影》摄影作品"],
+    productCount: 1,
+    status: "审理中",
+    total: 26000,
+    date: "8月18日",
+  },
+  {
+    id: "12",
+    orderNumber: "鲁0202民初·0876",
+    customer: "某旅游内容号",
+    customerInitials: "旅",
+    products: ["《看见上海》组照"],
+    productCount: 1,
+    status: "材料审核",
+    total: 16000,
+    date: "8月17日",
+  },
+  {
+    id: "13",
+    orderNumber: "闽0203民初·2120",
+    customer: "某电商商家",
+    customerInitials: "店",
+    products: ["无界系列插画"],
+    productCount: 1,
+    status: "待立案",
+    total: 20000,
+    date: "8月16日",
+  },
+  {
+    id: "14",
+    orderNumber: "湘0103民初·1695",
+    customer: "某短视频矩阵",
+    customerInitials: "短",
+    products: ["《山海之间》短片"],
+    productCount: 3,
+    status: "已结案",
+    total: 32000,
+    date: "8月15日",
+  },
+  {
+    id: "15",
+    orderNumber: "津0101民初·0742",
+    customer: "某品牌官网",
+    customerInitials: "官",
+    products: ["《城市光影》摄影作品"],
+    productCount: 1,
+    status: "审理中",
+    total: 45000,
+    date: "8月14日",
+  },
+  {
+    id: "16",
+    orderNumber: "陕0103民初·1288",
+    customer: "某资讯客户端",
+    customerInitials: "资",
+    products: ["《日落之后》纪录片"],
+    productCount: 2,
+    status: "材料审核",
+    total: 19000,
+    date: "8月13日",
+  },
+  {
+    id: "17",
+    orderNumber: "渝0105民初·2036",
+    customer: "某内容工作室",
+    customerInitials: "内",
+    products: ["《看见上海》组照"],
+    productCount: 1,
+    status: "待立案",
+    total: 27000,
+    date: "8月12日",
+  },
+  {
+    id: "18",
+    orderNumber: "辽0102民初·0964",
+    customer: "某视频网站",
+    customerInitials: "视",
+    products: ["《山海之间》短片"],
+    productCount: 1,
+    status: "审理中",
+    total: 38000,
+    date: "8月11日",
+  },
+  {
+    id: "19",
+    orderNumber: "皖0104民初·1551",
+    customer: "某素材下载站",
+    customerInitials: "素",
+    products: ["无界系列插画"],
+    productCount: 2,
+    status: "已结案",
+    total: 14000,
+    date: "8月10日",
+  },
+  {
+    id: "20",
+    orderNumber: "豫0105民初·1886",
+    customer: "某摄影社区",
+    customerInitials: "摄",
+    products: ["《城市光影》摄影作品"],
+    productCount: 1,
+    status: "待立案",
+    total: 23000,
+    date: "8月9日",
+  },
 ];
 
-const recentActivity: ActivityItem[] = [
-  {
-    title: "发现疑似侵权",
-    detail: "某电商平台 ·《城市光影》",
-    time: "2 分钟前",
-  },
-  {
-    title: "证据固化完成",
-    detail: "网页取证、时间戳与主体信息已归档",
-    time: "8 分钟前",
-  },
-  {
-    title: "起诉材料已投递",
-    detail: "上海市浦东新区人民法院",
-    time: "26 分钟前",
-  },
-  {
-    title: "新增平台线索",
-    detail: "某短视频账号 ·《山海之间》",
-    time: "1 小时前",
-  },
-  {
-    title: "法院已接收材料",
-    detail: "案件编号：京0491民初·1162",
-    time: "2 小时前",
-  },
-  {
-    title: "侵权内容已下架",
-    detail: "某图片素材站 · 无界系列插画",
-    time: "今天 08:42",
-  },
-  {
-    title: "赔偿款执行完成",
-    detail: "案件编号：深0305民初·2398",
-    time: "昨天",
-  },
-  {
-    title: "Agent 完成法律审查",
-    detail: "诉讼请求与证据目录已校验",
-    time: "昨天",
-  },
-  {
-    title: "发现搜索引擎快照",
-    detail: "疑似侵权页面已进入核验队列",
-    time: "8月25日",
-  },
-  {
-    title: "权利证明已更新",
-    detail: "《日落之后》著作权登记信息",
-    time: "8月24日",
-  },
-];
-
- const DashboardHeader = () => {
+const DashboardHeader = () => {
   return (
     <header className="flex w-full items-center gap-3 border-b bg-background px-4 py-4 sm:px-6">
       <h1 className="text-xl font-semibold tracking-tight sm:text-[22px]">木林影像企业</h1>
@@ -1085,7 +1179,7 @@ const RecentTransactionsTable = ({ className }: { className?: string }) => {
     "all",
   );
   const [currentPage, setCurrentPage] = React.useState(1);
-  const pageSize = 6;
+  const pageSize = 20;
 
   const filteredOrders = React.useMemo(() => {
     if (statusFilter === "all") return orders;
@@ -1251,48 +1345,6 @@ const RecentTransactionsTable = ({ className }: { className?: string }) => {
   );
 };
 
-const RecentActivity = ({ className }: { className?: string }) => {
-  return (
-    <div id="discoveries" className={cn("rounded-xl border bg-card", className)}>
-      <div className="flex items-center justify-between gap-3 px-4 pt-4 sm:px-6">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            className="size-7 shrink-0 sm:size-8"
-            aria-label="新发现"
-          >
-            <Bell className="size-4 text-muted-foreground sm:size-[18px]" />
-          </Button>
-          <span className="text-sm font-medium sm:text-base">
-            新发现与 Agent 动态
-          </span>
-        </div>
-      </div>
-
-      <ScrollArea className="h-[360px] px-4 pt-2 pb-4 text-xs sm:px-6 sm:text-sm">
-        <div className="divide-y">
-          {recentActivity.map((item) => (
-            <div key={`${item.title}-${item.time}`} className="py-3">
-              <div className="flex items-center justify-between gap-3">
-                <span className="font-medium text-foreground">
-                  {item.title}
-                </span>
-                <span className="text-[10px] text-muted-foreground sm:text-xs">
-                  {item.time}
-                </span>
-              </div>
-              <span className="text-[10px] text-muted-foreground sm:text-xs">
-                {item.detail}
-              </span>
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
-    </div>
-  );
-};
-
 const DashboardContent = () => {
   return (
     <main
@@ -1306,10 +1358,7 @@ const DashboardContent = () => {
         <RevenueFlowChart />
         <SideChartsSection />
       </div>
-      <div className="flex flex-col gap-4 xl:flex-row">
-        <RecentTransactionsTable className="flex-1" />
-        <RecentActivity className="xl:w-[360px]" />
-      </div>
+      <RecentTransactionsTable />
     </main>
   );
 };
