@@ -1181,19 +1181,40 @@ const statusStyles: Record<OrderStatus, string> = {
   已结案: "bg-white text-neutral-500 ring-1 ring-inset ring-neutral-300",
 };
 
-const statusDescriptions: Record<OrderStatus, string> = {
-  材料审核: "Agent 正在核验权利证明、侵权主体与证据目录。",
-  待立案: "起诉材料已生成并投递，正在等待法院受理。",
-  审理中: "法院已受理案件，Agent 正在持续跟进审理节点。",
-  已结案: "案件已经完成审理或执行，相关材料均已归档。",
-};
-
 const caseStages = [
   "证据固化",
   "起诉材料",
   "立案受理",
   "审理裁判",
   "执行结案",
+] as const;
+
+const stageDetails = [
+  {
+    description: "侵权页面、主体信息与时间戳证据已经完成固化。",
+    latestNode: "电子证据包已生成",
+    materialStatus: "网页取证、权利证明与侵权主体信息均已归档",
+  },
+  {
+    description: "Agent 已根据证据与诉讼请求生成起诉材料。",
+    latestNode: "起诉书与证据目录已完成",
+    materialStatus: "起诉书、证据清单、主体材料与授权文件均已备齐",
+  },
+  {
+    description: "起诉材料已经投递，法院已完成立案受理。",
+    latestNode: "法院立案信息已同步",
+    materialStatus: "案件编号、受理通知与缴费凭证均已归档",
+  },
+  {
+    description: "法院已受理案件，Agent 正在持续跟进审理节点。",
+    latestNode: "案件进入审理阶段",
+    materialStatus: "庭审材料、法院通知与补充证据均持续更新",
+  },
+  {
+    description: "判决、调解或执行结果已经确认，案件完成归档。",
+    latestNode: "案件处理结果已确认",
+    materialStatus: "裁判文书、履行凭证与结案材料均已归档",
+  },
 ] as const;
 
 const statusStageIndex: Record<OrderStatus, number> = {
@@ -1211,10 +1232,12 @@ const CaseDetailsDialog = ({
   onOpenChange: (open: boolean) => void;
 }) => {
   const activeStage = order ? statusStageIndex[order.status] : 0;
+  const [selectedStage, setSelectedStage] = React.useState(activeStage);
+  const selectedStageDetails = stageDetails[selectedStage];
 
   return (
     <Dialog open={order !== null} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="h-[min(720px,calc(100vh-2rem))]">
         <DialogHeader className="border-b px-6 py-5">
           <DialogTitle className="text-lg">案件详情</DialogTitle>
           <DialogDescription>{order?.orderNumber}</DialogDescription>
@@ -1237,23 +1260,33 @@ const CaseDetailsDialog = ({
                       aria-hidden="true"
                     />
                   )}
-                  <span
-                    className={cn(
-                      "relative z-10 grid size-6 place-items-center rounded-full border bg-background text-[10px] font-medium",
-                      index <= activeStage &&
-                        "border-primary bg-primary text-primary-foreground",
-                    )}
+                  <button
+                    type="button"
+                    disabled={index > activeStage}
+                    aria-current={index === selectedStage ? "step" : undefined}
+                    onClick={() => setSelectedStage(index)}
+                    className="group relative z-10 flex min-w-0 flex-col items-center gap-2 disabled:cursor-not-allowed"
                   >
-                    {index + 1}
-                  </span>
-                  <span
-                    className={cn(
-                      "truncate text-[10px] text-muted-foreground sm:text-xs",
-                      index === activeStage && "font-medium text-foreground",
-                    )}
-                  >
-                    {stage}
-                  </span>
+                    <span
+                      className={cn(
+                        "grid size-6 place-items-center rounded-full border bg-background text-[10px] font-medium transition-shadow",
+                        index <= activeStage &&
+                          "border-primary bg-primary text-primary-foreground",
+                        index === selectedStage &&
+                          "ring-2 ring-primary ring-offset-2 ring-offset-background",
+                      )}
+                    >
+                      {index + 1}
+                    </span>
+                    <span
+                      className={cn(
+                        "truncate text-[10px] text-muted-foreground sm:text-xs",
+                        index === selectedStage && "font-medium text-foreground",
+                      )}
+                    >
+                      {stage}
+                    </span>
+                  </button>
                 </li>
               ))}
             </ol>
@@ -1261,52 +1294,61 @@ const CaseDetailsDialog = ({
         )}
 
         {order && (
-          <div className="grid min-h-0 gap-6 overflow-y-auto px-6 pb-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+          <div className="grid min-h-0 flex-1 gap-6 overflow-y-auto px-6 pb-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
             <div className="space-y-6">
-            <div className="flex items-center justify-between rounded-lg border p-4">
-              <div>
-                <p className="text-xs text-muted-foreground">当前进度</p>
-                <p className="mt-1 text-sm font-medium">{order.status}</p>
-              </div>
-              <span
-                className={cn(
-                  "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium",
-                  statusStyles[order.status],
-                )}
-              >
-                {order.status}
-              </span>
-            </div>
-
-            <dl className="divide-y rounded-lg border px-4">
-              {[
-                ["侵权主体", order.customer],
-                ["维护作品", order.products.join("、")],
-                ["请求金额", currencyFormatter.format(order.total)],
-                ["关联内容", `${order.productCount} 项`],
-                ["更新时间", order.date],
-              ].map(([label, value]) => (
-                <div key={label} className="flex justify-between gap-6 py-3 text-sm">
-                  <dt className="shrink-0 text-muted-foreground">{label}</dt>
-                  <dd className="text-right font-medium">{value}</dd>
+              <div className="flex items-center justify-between rounded-lg border p-4">
+                <div>
+                  <p className="text-xs text-muted-foreground">当前进度</p>
+                  <p className="mt-1 text-sm font-medium">{order.status}</p>
                 </div>
-              ))}
-            </dl>
+                <span
+                  className={cn(
+                    "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium",
+                    statusStyles[order.status],
+                  )}
+                >
+                  {order.status}
+                </span>
+              </div>
+
+              <dl className="divide-y rounded-lg border px-4">
+                {[
+                  ["侵权主体", order.customer],
+                  ["维护作品", order.products.join("、")],
+                  ["请求金额", currencyFormatter.format(order.total)],
+                  ["关联内容", `${order.productCount} 项`],
+                  ["更新时间", order.date],
+                ].map(([label, value]) => (
+                  <div
+                    key={label}
+                    className="flex justify-between gap-6 py-3 text-sm"
+                  >
+                    <dt className="shrink-0 text-muted-foreground">{label}</dt>
+                    <dd className="text-right font-medium">{value}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
 
-            <section className="rounded-lg border p-5">
-              <h3 className="text-sm font-medium">Agent 进展</h3>
+            <section className="h-full rounded-lg border p-5">
+              <h3 className="text-sm font-medium">
+                {caseStages[selectedStage]} · 执行记录
+              </h3>
               <p className="mt-3 rounded-lg bg-muted p-4 text-sm leading-6 text-muted-foreground">
-                {statusDescriptions[order.status]}
+                {selectedStageDetails.description}
               </p>
               <div className="mt-5 space-y-4 border-l pl-4 text-sm">
                 <div>
                   <p className="font-medium">最新节点</p>
-                  <p className="mt-1 text-muted-foreground">{order.date} · {order.status}</p>
+                  <p className="mt-1 text-muted-foreground">
+                    {order.date} · {selectedStageDetails.latestNode}
+                  </p>
                 </div>
                 <div>
                   <p className="font-medium">材料状态</p>
-                  <p className="mt-1 text-muted-foreground">权利证明、侵权证据和主体信息均已归档</p>
+                  <p className="mt-1 text-muted-foreground">
+                    {selectedStageDetails.materialStatus}
+                  </p>
                 </div>
               </div>
             </section>
@@ -1501,6 +1543,7 @@ const RecentTransactionsTable = ({ className }: { className?: string }) => {
         </div>
       </div>
       <CaseDetailsDialog
+        key={selectedOrder?.id ?? "closed"}
         order={selectedOrder}
         onOpenChange={(open) => {
           if (!open) setSelectedOrder(null);
