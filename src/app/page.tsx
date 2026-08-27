@@ -27,7 +27,7 @@ import {
 import { Footer2 } from "@/block/footer2/footer2";
 import { Navbar1 } from "@/block/navbar1/navbar1";
 import { Pricing2 } from "@/block/pricing2/pricing2";
-import { Testimonial9 } from "@/block/testimonial9/testimonial9";
+import { Testimonial19 } from "@/block/testimonial19/testimonial19";
 import { Button } from "@/components/ui/button";
 
 const channels = [
@@ -269,7 +269,7 @@ export default function Home() {
       <Coverage />
       <LegalAgent />
       <div id="testimonials">
-        <Testimonial9 heading="把维权从负担，变成可查看的结果。" description="示例客户如何使用 Open Rights Guard 管理数字版权" testimonials={testimonials} />
+        <Testimonial19 heading="把维权从负担，变成可查看的结果。" description="示例客户如何使用 Open Rights Guard 管理数字版权" testimonials={testimonials} />
       </div>
       <div id="pricing" className="border-t">
         <Pricing2 heading="按需要选择保护范围" description="从个人作品到企业版权资产，随时升级。" plans={pricingPlans} />
