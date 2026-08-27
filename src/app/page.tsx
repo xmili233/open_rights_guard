@@ -6,6 +6,7 @@ import {
   Send,
   ShieldCheck,
 } from "lucide-react"
+import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 
@@ -68,7 +69,7 @@ export default function Home() {
               <a href="#contact">开始保护 <ArrowRight /></a>
             </Button>
             <Button asChild size="lg" variant="outline" className="h-12 rounded-md border-black/15 bg-white px-6">
-              <a href="#console">查看工作台</a>
+              <Link href="/dashboard">查看工作台</Link>
             </Button>
           </div>
 
