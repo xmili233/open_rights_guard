@@ -7,11 +7,9 @@ import {
   Scale,
   Search,
   Send,
-  ShieldCheck,
   Store,
   Video,
 } from "lucide-react";
-import Link from "next/link";
 import {
   SiBaidu,
   SiBilibili,
@@ -108,54 +106,15 @@ const pricingPlans = [
   },
 ];
 
-function Hero() {
-  return (
-    <section id="top" className="flex min-h-[calc(100svh-72px)] items-center overflow-hidden py-24">
-      <div className="container mx-auto">
-        <div className="relative isolate flex flex-col items-center gap-6 text-center">
-          <div aria-hidden="true" className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-border p-20 mask-[linear-gradient(to_top,transparent,white,white,transparent)] md:size-[1300px] md:p-40">
-            <div className="size-full rounded-full border border-border p-20 md:p-40">
-              <div className="size-full rounded-full border border-border" />
-            </div>
-          </div>
-          <span className="flex size-16 items-center justify-center rounded-full border bg-background md:size-20">
-            <ShieldCheck className="size-7" />
-          </span>
-          <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
-            Open Rights Guard · AI 数字版权维护
-          </p>
-          <h1 className="max-w-5xl text-balance text-[42px] leading-[1.05] font-semibold tracking-[-0.055em] sm:text-5xl md:text-7xl lg:text-[88px] lg:leading-[0.98]">
-            <span>您的版权，</span>
-            <br className="sm:hidden" />
-            <span>我们全权维护。</span>
-          </h1>
-          <p className="max-w-2xl text-balance text-lg text-muted-foreground md:text-xl">
-            从全网发现、证据固定到法律处置持续推进。您只需决定，先处理谁。
-          </p>
-          <div className="flex w-full flex-col justify-center gap-3 pt-4 sm:w-auto sm:flex-row">
-            <Button asChild size="lg" className="h-12 px-6">
-              <a href="#pricing">开始保护 <ArrowRight className="size-4" /></a>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="h-12 px-6">
-              <Link href="/dashboard">查看工作台</Link>
-            </Button>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function DashboardPreview() {
   return (
-    <section id="dashboard" className="border-y bg-muted/30 py-24 md:py-32">
+    <section id="top" className="border-y bg-muted/30 py-24 md:py-32">
       <div className="container mx-auto">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="mb-4 text-sm font-medium text-muted-foreground">一处掌握全部进展</p>
-          <h2 className="text-balance text-4xl font-semibold tracking-tight md:text-5xl">您看结果，Agent 负责推进。</h2>
-          <p className="mt-5 text-lg text-muted-foreground">正在维护的作品、新发现的线索与案件进度，都在同一个工作台持续更新。</p>
+          <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-5xl">您的版权，我们全权维护。</h1>
+          <p className="mt-5 text-lg text-muted-foreground">从全网发现、证据固定到法律处置持续推进。您只需决定，先处理谁。</p>
         </div>
-        <div className="mt-14 overflow-hidden rounded-xl border bg-background shadow-2xl shadow-black/10">
+        <div id="dashboard" className="mt-14 scroll-mt-24 overflow-hidden rounded-xl border bg-background shadow-2xl shadow-black/10">
           <div className="flex h-11 items-center gap-2 border-b px-4">
             <span className="size-2.5 rounded-full bg-neutral-300" />
             <span className="size-2.5 rounded-full bg-neutral-300" />
@@ -302,7 +261,6 @@ export default function Home() {
         ]}
         auth={{ login: { title: "登录工作台", url: "/dashboard" }, signup: { title: "申请试用", url: "#pricing" } }}
       />
-      <Hero />
       <DashboardPreview />
       <Coverage />
       <LegalAgent />
