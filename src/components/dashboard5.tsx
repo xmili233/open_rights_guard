@@ -51,7 +51,6 @@ import {
   ItemDescription,
   ItemGroup,
   ItemMedia,
-  ItemSeparator,
   ItemTitle,
 } from "@/components/ui/item";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -1586,35 +1585,34 @@ const CaseDetailsDialog = ({
               </div>
 
               <ScrollArea className="min-h-0 flex-1">
-                <ItemGroup>
-                  {selectedStageDetails.files.map((file, index) => (
-                    <React.Fragment key={file.title}>
-                      {index > 0 && <ItemSeparator />}
-                      <Item
-                        asChild
-                        size="sm"
-                        className="w-full cursor-pointer rounded-lg text-left hover:bg-accent/50"
+                <ItemGroup className="grid grid-cols-1 gap-3 py-4 md:grid-cols-2">
+                  {selectedStageDetails.files.map((file) => (
+                    <Item
+                      key={file.title}
+                      asChild
+                      size="sm"
+                      variant="outline"
+                      className="w-full cursor-pointer rounded-lg text-left hover:border-foreground/20 hover:bg-accent/40"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setPreviewFile(file)}
+                        aria-label={`打开文件 ${file.title}`}
                       >
-                        <button
-                          type="button"
-                          onClick={() => setPreviewFile(file)}
-                          aria-label={`打开文件 ${file.title}`}
-                        >
-                          <ItemMedia>
-                            <CaseFilePreview file={file} />
-                          </ItemMedia>
-                          <ItemContent className="min-w-0">
-                            <ItemTitle className="max-w-full">
-                              <span className="truncate">{file.title}</span>
-                              <Badge variant="outline" className="font-normal">
-                                {file.category}
-                              </Badge>
-                            </ItemTitle>
-                            <ItemDescription>{file.metadata}</ItemDescription>
-                          </ItemContent>
-                        </button>
-                      </Item>
-                    </React.Fragment>
+                        <ItemMedia>
+                          <CaseFilePreview file={file} />
+                        </ItemMedia>
+                        <ItemContent className="min-w-0">
+                          <ItemTitle className="max-w-full">
+                            <span className="truncate">{file.title}</span>
+                            <Badge variant="outline" className="font-normal">
+                              {file.category}
+                            </Badge>
+                          </ItemTitle>
+                          <ItemDescription>{file.metadata}</ItemDescription>
+                        </ItemContent>
+                      </button>
+                    </Item>
                   ))}
                 </ItemGroup>
               </ScrollArea>
