@@ -470,42 +470,40 @@ const StatsCards = () => {
             stat.format === "currency" ? currencyFormatter : numberFormatter;
 
           return (
-            <div key={stat.title} className="space-y-4 p-4 sm:p-6">
+            <div key={stat.title} className="space-y-2 p-3 sm:p-4">
               <div className="flex items-center gap-1.5 text-muted-foreground">
                 <stat.icon
-                  className="size-4 sm:size-[18px]"
+                  className="size-4"
                   aria-hidden="true"
                 />
                 <span className="text-xs font-medium sm:text-sm">
                   {stat.title}
                 </span>
               </div>
-              <p className="text-2xl font-semibold tracking-tight sm:text-[28px]">
-                {formatter.format(stat.value)}
-              </p>
-              <div className="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs xl:flex-nowrap">
-                <span
-                  className={cn(
-                    "font-medium",
-                    stat.isPositive
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : "text-red-600 dark:text-red-400",
-                  )}
-                >
-                  {stat.isPositive ? "+" : "-"}
-                  {stat.changePercent.toFixed(1)}%
-                  <span className="hidden sm:inline">
-                    (
-                    {formatter.format(
-                      Math.abs(stat.value - stat.previousValue),
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-xl font-semibold tracking-tight sm:text-2xl">
+                  {formatter.format(stat.value)}
+                </p>
+                <div className="flex shrink-0 items-center gap-2 text-[10px] sm:text-xs">
+                  <span
+                    className={cn(
+                      "font-medium",
+                      stat.isPositive
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-red-600 dark:text-red-400",
                     )}
-                    )
+                  >
+                    {stat.isPositive ? "+" : "-"}
+                    {stat.changePercent.toFixed(1)}%
+                    <span className="hidden sm:inline">
+                      ({formatter.format(Math.abs(stat.value - stat.previousValue))})
+                    </span>
                   </span>
-                </span>
-                <span className="hidden items-center gap-2 text-muted-foreground sm:inline-flex">
-                  <span className="size-1 rounded-full bg-muted-foreground" />
-                  <span className="xl:whitespace-nowrap">较上月</span>
-                </span>
+                  <span className="hidden items-center gap-2 text-muted-foreground sm:inline-flex">
+                    <span className="size-1 rounded-full bg-muted-foreground" />
+                    <span className="whitespace-nowrap">较上月</span>
+                  </span>
+                </div>
               </div>
             </div>
           );
