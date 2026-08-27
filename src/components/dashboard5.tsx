@@ -12,6 +12,7 @@ import {
   FileText,
   Filter,
   HelpCircle,
+  MessageSquareText,
   MoreHorizontal,
   PieChartIcon,
   Plus,
@@ -35,6 +36,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CaseAgentChat } from "@/components/case-agent-chat";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import {
   DropdownMenu,
@@ -1493,6 +1495,7 @@ const CaseDetailsDialog = ({
   const activeStage = order ? statusStageIndex[order.status] : 0;
   const [selectedStage, setSelectedStage] = React.useState(activeStage);
   const [previewFile, setPreviewFile] = React.useState<CaseFile | null>(null);
+  const [showAgent, setShowAgent] = React.useState(false);
   const selectedStageDetails = stageDetails[selectedStage];
 
   const selectStage = (stageIndex: number) => {
@@ -1503,7 +1506,12 @@ const CaseDetailsDialog = ({
   return (
     <>
       <Dialog open={order !== null} onOpenChange={onOpenChange}>
-        <DialogContent className="h-[min(720px,calc(100vh-2rem))]">
+        <DialogContent
+          className={cn(
+            "h-[min(720px,calc(100vh-2rem))]",
+            showAgent && "max-w-7xl",
+          )}
+        >
           <DialogHeader className="border-b px-6 py-4 pr-12 md:flex-row md:items-center md:gap-8">
             <div className="shrink-0">
               <DialogTitle className="text-lg">案件详情</DialogTitle>
@@ -1568,7 +1576,19 @@ const CaseDetailsDialog = ({
           </DialogHeader>
 
         {order && (
-          <div className="min-h-0 flex-1 overflow-hidden px-6 pb-6">
+          <div
+            className={cn(
+              "min-h-0 flex-1 overflow-hidden px-6 pb-6",
+              showAgent &&
+                "grid grid-cols-[380px_minmax(0,1fr)] gap-6",
+            )}
+          >
+            {showAgent && (
+              <CaseAgentChat
+                className="h-full border-r pr-6"
+                onClose={() => setShowAgent(false)}
+              />
+            )}
             <section className="flex h-full min-h-0 flex-col overflow-hidden">
               <div className="flex items-start justify-between gap-4 border-b py-4">
                 <div>
@@ -1616,6 +1636,23 @@ const CaseDetailsDialog = ({
                   ))}
                 </ItemGroup>
               </ScrollArea>
+              {!showAgent && (
+                <footer className="mt-auto flex items-center gap-2 border-t py-3 text-sm">
+                  <span className="text-muted-foreground">
+                    感觉材料不够或需要修改？
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-8 gap-1.5"
+                    onClick={() => setShowAgent(true)}
+                  >
+                    <MessageSquareText className="size-3.5" />
+                    修改
+                  </Button>
+                </footer>
+              )}
             </section>
           </div>
         )}
