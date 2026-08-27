@@ -1562,8 +1562,8 @@ const CaseDetailsDialog = ({
 
         {order && (
           <div className="min-h-0 flex-1 overflow-hidden px-6 pb-6">
-            <section className="flex min-h-0 flex-col overflow-hidden rounded-lg border">
-              <div className="flex items-start justify-between gap-4 border-b px-4 py-3.5">
+            <section className="flex h-full min-h-0 flex-col overflow-hidden">
+              <div className="flex items-start justify-between gap-4 border-b py-4">
                 <div>
                   <h3 className="text-sm font-semibold">
                     {selectedStageDetails.summary}
@@ -1578,7 +1578,7 @@ const CaseDetailsDialog = ({
               </div>
 
               <ScrollArea className="min-h-0 flex-1">
-                <ItemGroup className="p-2">
+                <ItemGroup>
                   {selectedStageDetails.files.map((file, index) => (
                     <React.Fragment key={file.title}>
                       {index > 0 && <ItemSeparator />}
