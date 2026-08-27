@@ -164,7 +164,7 @@ function Coverage() {
         </div>
       </div>
 
-      <div className="platform-rail relative mt-16">
+      <div className="platform-rail container relative mx-auto mt-16">
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-linear-to-r from-background to-transparent md:w-40" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-linear-to-l from-background to-transparent md:w-40" />
         <div className="platform-track items-center py-8">
